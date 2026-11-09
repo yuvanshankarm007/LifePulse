@@ -1,7 +1,7 @@
-# Devpost Submission Form Content: LifeSaver AR
+# Devpost Submission Form Content: LifePulse
 
-**Project Title:** LifeSaver AR — Spatial Guardian & Hands-Free Emergency Coach  
-**Tagline:** Protecting vulnerable populations with ambient safety and real-time hands-free emergency CPR & AED guidance on Snap Spectacles.  
+**Project Title:** LifePulse — Hands-Free Emergency Spatial Coach  
+**Tagline:** When seconds count and hands are occupied: Real-time spatial CPR cadence and AED guidance for Snap Spectacles.  
 **Track:** Learn AR with SPECS (Devpost & Snap Inc.)  
 **Project Repository:** (Public GitHub repository containing `.esproj`, `/scripts`, and `/devpost`)  
 **Demo Video URL:** (YouTube link to 2-minute preview demo)  
@@ -9,21 +9,23 @@
 ---
 
 ## 💡 Inspiration
-Over 350,000 out-of-hospital cardiac arrests occur every year, and millions of elderly individuals, women walking alone, and at-risk family members face acute health and safety emergencies where help is minutes too late. When a critical emergency strikes, **smartphones are fundamentally inadequate**:
-1. You need **both hands** interlocked with locked elbows to exert 50 kg of chest compression force, or to assist an injured relative.
-2. Looking down at a flat glass screen breaks your visual vigilance over the victim's airway, face, and vital signs.
+Over 350,000 out-of-hospital cardiac arrests occur every year, and survival drops by 10% for every minute without cardiopulmonary resuscitation (CPR). Yet, over 70% of bystanders hesitate to act, fear making a mistake, or fail to sustain the required 100–120 compressions-per-minute tempo.
+
+When an acute emergency strikes, **smartphones are fundamentally inadequate**:
+1. You need **both hands** interlocked with locked elbows to exert 50 kg of chest compression force.
+2. Looking down at a flat glass screen breaks visual vigilance over the victim's airway, chest rise, and vital signs.
 3. Fumbling with phone locks, dials, wet gloves, or biometric sensors under acute panic wastes precious seconds.
 
 Snap Spectacles offer a revolutionary alternative: a head-worn spatial computer that **shares your view**, **draws directly in the physical world**, and **leaves your body and hands 100% free**. 
 
-We conceived **LifeSaver AR** as an ambient spatial guardian designed to protect vulnerable individuals—especially elderly living alone, women traveling late, and people with high-risk health conditions—by combining preventative safety awareness with immediate, hands-free acute crisis response.
+We built **LifePulse** to transform anyone wearing Spectacles into an empowered, fearless first responder who can act decisively and save a life.
 
 ---
 
 ## ⚡ What it Does
-**LifeSaver AR** introduces an ambient spatial safety architecture built natively for Snap Spectacles. Its flagship operational module, **LifePulse**, guides bystanders and caregivers step-by-step through high-quality CPR and automated external defibrillator (AED) deployment:
+**LifePulse** is a clinical-first emergency coaching system built natively for Snap Spectacles. It guides bystanders step-by-step through high-quality CPR and automated external defibrillator (AED) deployment:
 
-* **Spatial Anatomical Anchoring:** Rather than floating an annoying 2D HUD website in front of your face, LifeSaver AR anchors a glowing 18 cm target ring directly onto the lower half of the victim's sternum.
+* **Spatial Anatomical Anchoring:** Rather than floating an annoying 2D HUD website in front of your face, LifePulse anchors a glowing 18 cm target ring directly onto the lower half of the victim's sternum.
 * **110 BPM Rhythmic Cadence Metronome:** Synchronizes visual radial pulses and spatial audio ticks at precisely 110 beats per minute (the American Heart Association sweet spot between 100–120 BPM).
 * **30:2 Cycle Automation:** Dynamically tracks chest compressions (1 to 30) with real-time feedback (`OPTIMAL CADENCE`), then automatically transitions into the rescue breath phase.
 * **Selective Disclosure:** When 30 compressions are reached, the chest ring dims and guidance instantly migrates to the victim's airway with an audible cue and a 4-second breath countdown, keeping the user's field of view clean and focused.

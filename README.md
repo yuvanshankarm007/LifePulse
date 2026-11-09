@@ -1,14 +1,15 @@
-# 🫀 LifeSaver AR: Spatial Guardian & Emergency Coach
+# 🫀 LifePulse: Hands-Free Emergency Spatial Coach
 ### Built for Snap Spectacles | Learn AR with SPECS (Devpost & Snap Inc.)
 
-> **"An ambient spatial guardian designed to protect vulnerable populations—elderly, at-risk individuals, and everyday citizens. Powered by the LifePulse emergency module for hands-free CPR and AED spatial rescue on Snap Spectacles."**
+> **"When seconds count and hands are occupied: Saving lives through real-time spatial CPR guidance and AED deployment on Snap Spectacles."**
 
 ---
 
 ## 🏆 Project Highlights
+* **Project Name:** LifePulse
 * **Submission Deadline:** November 9, 2026 (5:00 PM ET)
 * **Target Category:** Grand Prize Winner ($2,500 Prize Pool)
-* **The Vision:** LifeSaver AR provides an ambient safety network for elderly individuals living alone, women navigating transit, and people at risk, pairing preventative awareness with instant acute crisis rescue.
+* **The Mission:** LifePulse turns anyone wearing Snap Spectacles into an immediate life-saver during acute collapse and cardiac arrest, providing hands-free, spatially-anchored CPR cadence and AED guidance.
 * **Core Technological Modalities:** 
   1. **Shares View:** Identifies victim orientation and anatomical sternum position.
   2. **Draws in World:** Projects an 18 cm glowing target ring on the chest + holographic AED pads.

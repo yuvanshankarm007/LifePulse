@@ -2,12 +2,12 @@
 status: approved
 ---
 
-# Design brief: LifeSaver AR (Module: LifePulse Emergency Coach)
+# Design brief: LifePulse
 
 <!-- Generated for Learn AR with SPECS (Devpost & Snap Inc.) -->
 
 ## The one spatial moment
-A bystander or caregiver rushes to assist a collapsed individual. Through Snap Spectacles, LifeSaver AR activates its acute crisis module: a glowing 3D compression target and cadence ring project directly onto the victim's chest, flashing at exactly 110 BPM with synchronized spatial audio cues, while a floating counter tallies "30 compressions, then 2 rescue breaths" — keeping the rescuer's eyes locked on the patient and both hands locked in CPR compressions without ever touching a screen.
+A bystander or caregiver rushes to assist a collapsed individual. Through Snap Spectacles, LifePulse activates: a glowing 3D compression target and cadence ring project directly onto the victim's chest, flashing at exactly 110 BPM with synchronized spatial audio cues, while a floating counter tallies "30 compressions, then 2 rescue breaths" — keeping the rescuer's eyes locked on the patient and both hands locked in CPR compressions without ever touching a screen.
 
 ## Why it belongs on glasses
 - **Uses:** Shares your view, Draws in the world, Leaves your body free.

@@ -1,6 +1,6 @@
-# LifePulse AR — 2-Minute Demo Video Script & Storyboard
+# LifePulse — 2-Minute Demo Video Script & Storyboard
 **Hackathon:** Learn AR with SPECS (Devpost & Snap Inc.)  
-**Project:** LifePulse AR — Hands-Free Emergency Spatial Coach  
+**Project:** LifePulse — Hands-Free Emergency Spatial Coach  
 **Target Duration:** 1 minute 55 seconds (under the 2–3 minute limit)  
 **Platform:** Recorded directly in Lens Studio Interactive Preview (using WASD locomotion + mouse pinch)
 
