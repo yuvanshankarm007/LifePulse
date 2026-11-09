@@ -1,0 +1,10 @@
+# Environment variables (Contains secret API keys - NEVER commit)
+.env
+*.env.local
+
+# Lens Studio Cache & Temp Files
+LifePulse/Cache/
+LifePulse/Temp/
+LifePulse/*.lock
+node_modules/
+npm-debug.log*

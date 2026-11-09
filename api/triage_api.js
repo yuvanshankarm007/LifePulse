@@ -302,38 +302,7 @@ Analyze the bystander's emergency description and return ONLY a valid raw JSON o
 
     const timeoutMs = 3500; // 3.5s timeout for zero-stall bystander safety
 
-    // 1. Google Gemini API
-    if (process.env.GEMINI_API_KEY) {
-        try {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), timeoutMs);
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                signal: controller.signal,
-                body: JSON.stringify({
-                    contents: [
-                        { role: 'user', parts: [{ text: `${systemPrompt}\n\nEmergency Situation: ${userInput}` }] }
-                    ],
-                    generationConfig: { responseMimeType: "application/json" }
-                })
-            });
-            clearTimeout(timeout);
-            if (res.ok) {
-                const data = await res.json();
-                const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (rawText) {
-                    const parsed = JSON.parse(rawText);
-                    return { sourceAI: "Google Gemini 1.5 Flash", triage: parsed };
-                }
-            }
-        } catch (e) {
-            console.warn(`[Live AI] Gemini call fallback: ${e.message}`);
-        }
-    }
-
-    // 2. Groq LLaMA 3.3
+    // 1. Groq Ultra-Fast AI (Primary verified ultra-low latency engine)
     if (process.env.GROQ_API_KEY) {
         try {
             const controller = new AbortController();
@@ -346,8 +315,7 @@ Analyze the bystander's emergency description and return ONLY a valid raw JSON o
                 },
                 signal: controller.signal,
                 body: JSON.stringify({
-                    model: 'llama-3.3-70b-versatile',
-                    response_format: { type: 'json_object' },
+                    model: 'openai/gpt-oss-120b',
                     messages: [
                         { role: 'system', content: systemPrompt },
                         { role: 'user', content: userInput }
@@ -357,14 +325,51 @@ Analyze the bystander's emergency description and return ONLY a valid raw JSON o
             clearTimeout(timeout);
             if (res.ok) {
                 const data = await res.json();
-                const rawText = data.choices?.[0]?.message?.content;
+                let rawText = data.choices?.[0]?.message?.content?.trim();
                 if (rawText) {
+                    if (rawText.startsWith('```json')) rawText = rawText.replace(/^```json/, '').replace(/```$/, '').trim();
+                    else if (rawText.startsWith('```')) rawText = rawText.replace(/^```/, '').replace(/```$/, '').trim();
                     const parsed = JSON.parse(rawText);
-                    return { sourceAI: "Groq LLaMA 3.3 70B", triage: parsed };
+                    return { sourceAI: "Groq GPT-OSS-120B (Live AI Engine)", triage: parsed };
                 }
             }
         } catch (e) {
             console.warn(`[Live AI] Groq call fallback: ${e.message}`);
+        }
+    }
+
+    // 2. Google Gemini API
+    if (process.env.GEMINI_API_KEY) {
+        const geminiModels = ['gemini-flash-latest', 'gemini-2.5-flash-lite', 'gemini-3.8-flash'];
+        for (const m of geminiModels) {
+            try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), timeoutMs);
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${process.env.GEMINI_API_KEY}`;
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        contents: [
+                            { role: 'user', parts: [{ text: `${systemPrompt}\n\nEmergency Situation: ${userInput}` }] }
+                        ]
+                    })
+                });
+                clearTimeout(timeout);
+                if (res.ok) {
+                    const data = await res.json();
+                    let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+                    if (rawText) {
+                        if (rawText.startsWith('```json')) rawText = rawText.replace(/^```json/, '').replace(/```$/, '').trim();
+                        else if (rawText.startsWith('```')) rawText = rawText.replace(/^```/, '').replace(/```$/, '').trim();
+                        const parsed = JSON.parse(rawText);
+                        return { sourceAI: `Google Gemini (${m})`, triage: parsed };
+                    }
+                }
+            } catch (e) {
+                console.warn(`[Live AI] Gemini ${m} fallback: ${e.message}`);
+            }
         }
     }
 
