@@ -99,3 +99,12 @@ In Lens Studio **Interactive Preview**:
    - Go to [learn-specs.devpost.com](https://learn-specs.devpost.com/)
    - Copy-paste the title (`LifePulse`) and text from [`pitch/DEVPOST_SUBMISSION.md`](pitch/DEVPOST_SUBMISSION.md).
    - Paste your YouTube video link and GitHub repository link.
+
+---
+
+## 📜 License
+
+This project is licensed under the **PolyForm Noncommercial License 1.0.0**.
+
+* **Non-Commercial Use:** Free for open-source research, academic, personal, and non-commercial exploration.
+* **Commercial Use:** Any commercial use, licensing, or integration into paid commercial products requires prior express written permission from the author (**Yuvan Shankar**). See [`LICENSE`](LICENSE) for full details.
