@@ -2,98 +2,84 @@
 status: approved
 ---
 
-# Design brief: LifePulse
+# Design brief: LifePulse — Hands-Free Multi-Emergency Spatial First Responder
 
 <!-- Generated for Learn AR with SPECS (Devpost & Snap Inc.) -->
 
 ## The one spatial moment
-A bystander or caregiver rushes to assist a collapsed individual. Through Snap Spectacles, LifePulse activates: a glowing 3D compression target and cadence ring project directly onto the victim's chest, flashing at exactly 110 BPM with synchronized spatial audio cues, while a floating counter tallies "30 compressions, then 2 rescue breaths" — keeping the rescuer's eyes locked on the patient and both hands locked in CPR compressions without ever touching a screen.
+A bystander rushes to an emergency scene. Through Snap Spectacles, LifePulse immediately identifies the critical scenario and projects real-time spatial anatomical guides directly onto the victim: 
+- For **Cardiac Arrest**: an 18 cm sternum target pulsing at 110 BPM with a 30:2 compression counter and holographic AED pad placement.
+- For **Severe Choking**: navel-level abdominal thrust guidance with upward directional arrows and 5:5 back blow tracking.
+- For **Severe Bleeding**: an arterial pressure point clamp and a 2–3 inch tourniquet placement line.
+- For **Opioid Overdose**: Narcan nasal spray administration prompts and a recovery position roll guide.
+All guidance is hands-free, keeping the rescuer's eyes on the victim and hands actively performing life-saving interventions.
 
 ## Why it belongs on glasses
 - **Uses:** Shares your view, Draws in the world, Leaves your body free.
 - **Why it's better than the phone or laptop version:**
-  - **Both hands are physically occupied:** High-quality CPR requires interlocking both hands, locking elbows, and exerting 50–60 kg of upper body force at 100–120 compressions per minute. You cannot hold, swipe, or unlock a smartphone while performing chest compressions.
-  - **Eyes cannot leave the patient:** Looking down at a phone screen breaks visual monitoring of the victim’s chest rise, airway, and facial response. Glasses overlay critical guidance directly in the rescuer's forward gaze.
-  - **Zero-touch contamination:** In medical emergencies involving fluids or outdoor grime, touching personal mobile screens is hazardous and awkward. Glasses provide completely hands-free visual and audio guidance.
-  - **Spatial precision:** Unlike a 2D instructional video, LifePulse AR anchors the exact anatomical placement (center of the chest on the lower half of the sternum) and illustrates AED pad placement directly over physical anatomy.
+  - **Both hands are physically occupied:** CPR compressions require 50 kg of two-handed force. Heimlich thrusts require interlocking fists around the abdomen. Hemorrhage control requires two hands applying bodyweight pressure or tightening a tourniquet windlass. You cannot hold a smartphone while saving a life.
+  - **Eyes cannot leave the patient:** Looking down at a phone screen breaks visual vigilance over airway obstruction, chest rise, and facial responsiveness. Spectacles overlay guidance directly in the forward field of view.
+  - **Zero-touch contamination:** In emergencies involving blood, vomit, or environmental grime, touching smartphone touchscreens is hazardous and slow. Spectacles provide completely hands-free visual and acoustic pacing.
+  - **Spatial precision:** Unlike generic 2D tutorial videos, LifePulse anchors the exact anatomical placement (sternum, navel, limb wound, nostril) directly onto physical 3D anatomy.
 
 ## Product or overlay
 - **Type:** Overlay (responds to and anchors onto the victim's physical body and surrounding emergency space).
 - **What the real version would sense:**
-  - Real-world victim orientation (laying supine on the floor).
-  - Chest recoil and compression cadence via front-facing camera depth and accelerometer/IMU sync.
-  - AED unit packaging and electrode pad placement.
+  - Victim position, orientation, and joint tracking (supine on floor or upright for choking).
+  - Chest recoil, compression depth, and cadence via front-facing depth sensors.
+  - Medical kits (AED pads, tourniquet, Narcan nasal spray).
 - **Stand-in for the preview:**
-  - A realistic 3D human mannequin model placed supine on the floor 1.2 meters in front of the camera.
-  - An interactive "Emergency Scenario Trigger" panel to start/pause the cardiac arrest simulation.
-  - Interactive SIK buttons: "Inspect Patient", "Simulate 30 Compressions", "Deploy AED", and "Check Recoil/Cadence".
+  - A 3D human mannequin model placed in the room.
+  - Interactive Preview click/tap gestures simulating chest compressions, Heimlich thrusts, and wound pressure.
+  - Interactive top-header mode selector cycling between the 4 emergency protocols.
 
 ## Where things live
-- **Where the user is looking during the main task:** Looking downwards at roughly a 35°–45° tilt toward the floor, focused on the victim's chest at a distance of 0.8m to 1.1m.
-- **Chest Compression Target & Pulse Ring:**
-  - Anchored directly onto the lower half of the victim's sternum (between the nipples).
-  - Height: Sitting flush on the torso surface (~25 cm above floor level).
-  - Distance: ~0.9 meters from rescuer eye level.
-  - Size: 18 cm diameter concentric pulse target with glowing green/cyan additive shaders.
-- **Heads-Up Emergency Status HUD (Selective Mini-Card):**
-  - Position: Floating 15 cm above the victim's chest, angled 20° up toward the rescuer's eye line.
-  - Distance: ~0.95 meters.
-  - Size: 24 cm wide x 14 cm tall.
-  - Contents: Current Phase ("CPR CYCLE 1: COMPRESSIONS"), Live Counter ("24 / 30"), Cadence Indicator ("110 BPM — PERFECT CADENCE").
-- **AED Electrode Pad Holographic Guides:**
-  - Pad 1 (Right upper chest below collarbone): Glowing blue outline (12 cm x 10 cm).
-  - Pad 2 (Left lower ribs, mid-axillary line below armpit): Glowing blue outline (12 cm x 10 cm).
-  - Anchors: Attached directly to the virtual torso mesh.
-- **Emergency Action Navigation Controls:**
-  - Position: Arm's length (~70 cm), floating slightly to the right of the workspace (+35 cm X offset, -15 cm Y offset relative to center).
-  - Size: Big, high-contrast SIK pinch targets (12 cm x 6 cm each) that highlight on gaze/aim.
+- **Where the user is looking during the main task:** Looking downwards at roughly a 30°–45° tilt toward the victim at a distance of 0.8m to 1.2m.
+- **Status HUD (Instruction Card):**
+  - Position: Floating 14 cm above the torso (`{ x: 0, y: 14, z: -70 }`).
+  - Size: 30 cm wide x 12 cm tall.
+  - Color: High-contrast cyan and amber additive text (`EMERGENCY: [TYPE] - INSTRUCTION`).
+- **Counter & Cadence Display:**
+  - Position: Floating directly below the status HUD (`{ x: 0, y: 4, z: -70 }`).
+  - Size: 25 cm wide x 10 cm tall.
+  - Contents: Real-time action counter (`COMPRESSION: X / 30`, `HEIMLICH THRUST: X / 5`, `HEMO-SEAL PRESSURE`).
+- **Anatomical Target Ring:**
+  - Position: Dynamically moves based on emergency type:
+    * Cardiac: Center sternum (`{ x: 0, y: -12, z: -65 }`), pulsing at 110 BPM.
+    * Choking: Upper abdomen / navel (`{ x: 0, y: -6, z: -65 }`).
+    * Bleeding: Limb pressure point (`{ x: -15, y: -15, z: -65 }`).
+    * Overdose: Head / nasal area (`{ x: 0, y: 0, z: -65 }`).
 
 ## Hands and input
-- **Primary Input Mode:** Hands-free passive audio/visual guidance during active compressions.
-- **Secondary / Fallback SIK Inputs (driven by mouse in preview, pinch on hardware):**
-  - **"Pinch to Confirm Responsiveness / Call 911"**: Large 12 cm button floating near the patient's head.
-  - **"Pinch to Start CPR Cadence"**: Center action button, initiates the 110 BPM metronome and ring animations.
-  - **"Pinch to Advance Cycle / AED Ready"**: Advances to the defibrillation guide.
-- **All SIK Interactables:**
-  - Utilize Spectacles Interaction Kit (SIK) Interactable with generous visual hover states (border glow + 1.1x scale pulse).
-  - Equipped with spatial click sounds on trigger.
-- **Voice Fallback:**
-  - Voice command: "Start CPR" / "AED Ready" paired 1:1 with corresponding large visible SIK pinch buttons.
+- **Primary Input Mode:** 100% hands-free passive audio/visual guidance during active compressions/thrusts.
+- **Preview Stand-in Inputs (driven by mouse in preview / pinch on hardware):**
+  - **Click Top Header:** Toggles emergency mode (`CARDIAC` $\rightarrow$ `CHOKING` $\rightarrow$ `BLEEDING` $\rightarrow$ `OVERDOSE`).
+  - **Click Target / Center:** Pumps chest, applies thrust, or holds pressure with real-time elastic recoil animation.
 
 ## When things show
-- **Phase 1: Assessment (0s – 10s):**
-  - Shows: "Check Responsiveness & Breathing" card + 911 Emergency confirmation button over patient head.
-  - Hides: All CPR rings and AED guides to keep FOV uncluttered.
-- **Phase 2: Active CPR Compressions (Cycle of 30:2):**
-  - Shows: Sternum pulse ring (pulsing at 110 BPM), compression counter (0 to 30), and spatial metronome chime.
-  - Hides: Assessment card.
-- **Phase 3: Rescue Breaths (after 30 compressions):**
-  - Shows: "Open Airway & Give 2 Breaths" prompt over victim's mouth with a 4-second countdown progress bar.
-  - Hides: Sternum compression ring temporarily to reduce visual noise.
-- **Phase 4: AED Pad Placement:**
-  - Shows: Glowing holographic pad targets on the torso + directional spatial chime pointing to the virtual AED unit.
-  - Hides: Compression counter.
-- **Audio Cue for Out-of-View Elements:**
-  - If the rescuer turns their head away from the patient, a subtle directional arrow at the edge of the display plus a spatial audio beacon guides their gaze back to the patient's sternum.
+- **Selective Disclosure:** Only elements relevant to the active emergency are displayed.
+  - Cardiac: 110 BPM pulse ring + 30:2 counter. Dims during rescue breaths.
+  - Choking: Upward thrust arrows + 5:5 counter. Hides cardiac metronome.
+  - Bleeding: Pressure seal gauge + tourniquet line. Hides breath prompts.
+  - Overdose: Narcan nasal indicator $\rightarrow$ Recovery position roll prompt.
 
 ## Done criteria
 Each criterion is fully verifiable within Lens Studio Interactive Preview:
-1. **Scene Initialization & Mannequin Placement:** On Lens launch, a 3D supine patient mannequin is anchored on the floor 1.0 m in front of the camera, and an initial "Assess Patient / Call 911" card is visible within the 37° FOV without head turning.
-2. **Interactive SIK Activation:** Clicking the "Start CPR" button with the mouse (simulated pinch) activates the CPR state: the sternum target ring glows and pulses at 110 BPM, accompanied by an audible metronome beat.
-3. **Compression Cycle Counting:** Clicking the "Simulate Compression" button increments the on-screen compression counter from 1 to 30.
-4. **Automatic Phase Transition to Breaths:** Upon reaching compression count 30, the sternum ring dims, and the "Give 2 Rescue Breaths" prompt immediately appears over the victim's head with a 4-second breath timer.
-5. **AED Pad Holographic Guidance:** Pinching/clicking the "Deploy AED" button hides the breath card and renders both electrode pad target zones (Right Collarbone & Left Ribcage) in high-contrast cyan on the mannequin's chest with pulsating border animations.
-6. **Additive Color & Readability:** All text and UI elements use high-contrast cyan, white, and amber additive-safe colors (no pure black/dark-dependent text) and remain sharp and legible from the standing/kneeling viewing distance (0.8m – 1.2m).
+1. **Scene Initialization:** On launch, the 3D patient mannequin, Status HUD, Counter Display, and Target Ring are properly anchored within the 37° FOV.
+2. **Emergency Mode Cycling:** Clicking the top header area successfully cycles through all 4 emergency protocols (`CARDIAC`, `CHOKING`, `BLEEDING`, `OVERDOSE`), updating the HUD and relocating the target ring.
+3. **110 BPM Cardiac Metronome:** In Cardiac mode, the sternum target ring pulses continuously at 110 BPM (~0.545s intervals).
+4. **Interactive Action Feedback:** Clicking in the preview registers an action: increments counter and triggers an elastic squash-and-recoil bounce on the target ring.
+5. **Cycle Threshold Transitions:** Reaching 30 compressions in Cardiac mode triggers rescue breaths; reaching 5 thrusts in Choking mode prompts airway clearance.
+6. **Additive Shader Legibility:** All text and UI elements use high-contrast cyan, white, and amber additive colors, maintaining clarity without dark/black-dependent styling.
 
 ## Out of scope
-- Real-time video-based computer vision analysis of physical human skin or blood flow.
-- Two-way live dispatch video streaming with 911 operators.
-- Persistent spatial anchor cloud sync between multiple Spectacles users.
-- Custom wrist or finger pose recognition outside standard SIK pinch mechanics.
+- Live computer vision biometric vital sign diagnosis.
+- Two-way dispatch video streaming with 911 dispatchers.
+- Cloud multiplayer synchronization between multiple Spectacles users.
 
 ## Risks and open questions
-- **Viewing Angle Comfort (Addressed):** Looking downward at a patient on the floor for extended periods can cause neck strain. *Mitigation:* The HUD is angled upwards by 20° and floats 15 cm above the torso, allowing the rescuer to keep their head at a comfortable 30° natural downward tilt rather than a steep 60° bend.
-- **Field of View Bounds (Addressed):** The Spectacles FOV is 37° x 32°. All critical indicators (target ring, count, and status) are bundled within a tight 28 cm radial footprint on the patient's torso, ensuring zero visual clipping during CPR.
+- **FOV Bounds (Addressed):** All UI elements are contained within a tight 30 cm radius directly in the rescuer's downward gaze, preventing edge clipping on the 37° x 32° waveguide display.
+- **Viewing Angle Comfort (Addressed):** The HUD floats 14 cm above the torso at a 20° upward tilt, allowing rescuers to maintain a comfortable 30° natural neck angle rather than a steep 60° bend.
 
 ## Build notes for CLAD
 - Build for SPECS so it runs and can be demonstrated in Lens Studio's preview. No SPECS device is available.
@@ -121,5 +107,5 @@ This part is for you, after CLAD finishes.
    - Text reads easily from where I stand. No dark UI disappearing.
    - Things show when needed and get out of the way.
 5. **Label what you know.** Write "logic proven" next to anything the tests and preview show working, and "feel unproven" next to anything only real glasses could tell you (comfort over time, real hand tracking, real recognition).
-6. **Fix with design notes, not code.** Tell your agent what to change in design terms, for example: "Move the step card 15 cm lower and next to the pan. Make the Next button twice as big. Re-run the tests." If a fix takes under a minute, like nudging a panel, do it yourself in the scene.
+6. **Fix with design notes, not code.** Tell your agent what to change in design terms.
 7. **Submit.** Record a video under 3 minutes of your Lens in the preview, public on YouTube. Make your repo public with your Lens Studio project and this `devpost/` folder. Details are on the hackathon site: https://learn-specs.devpost.com/resources

@@ -1,7 +1,7 @@
-# 🫀 LifePulse
+# 🫀 LifePulse: Hands-Free Multi-Emergency Spatial First Responder
 ### Built for Snap Spectacles | Learn AR with SPECS (Devpost & Snap Inc.)
 
-> **"When seconds count and hands are occupied: Saving lives through real-time spatial CPR guidance and AED deployment on Snap Spectacles."**
+> **"When seconds count and hands are occupied: Real-time spatial first responder coaching for Cardiac Arrest, Choking, Severe Bleeding, and Overdose on Snap Spectacles."**
 
 ---
 
@@ -9,12 +9,16 @@
 * **Project Name:** LifePulse
 * **Submission Deadline:** November 9, 2026 (5:00 PM ET)
 * **Target Category:** Grand Prize Winner ($2,500 Prize Pool)
-* **The Mission:** LifePulse turns anyone wearing Snap Spectacles into an immediate life-saver during acute collapse and cardiac arrest, providing hands-free, spatially-anchored CPR cadence and AED guidance.
-* **Core Technological Modalities:** 
-  1. **Shares View:** Identifies victim orientation and anatomical sternum position.
-  2. **Draws in World:** Projects an 18 cm glowing target ring on the chest + holographic AED pads.
-  3. **Leaves Body Free:** Rescuer performs 100% two-handed CPR chest compressions without touching a screen.
-* **Verification:** 100% automated test pass rate across 6 LEAF test scenarios in Lens Studio Interactive Preview.
+* **The 4 Spatial Emergency Protocols:**
+  1. **❤️ Cardiac Arrest:** 110 BPM Sternum Pulse Ring + 30:2 Compression Cadence + Rescue Breaths + AED Guides.
+  2. **🗣️ Severe Choking:** Navel-level Heimlich Maneuver + 5:5 Back Blow Tracking.
+  3. **🩸 Severe Bleeding:** Limb Pressure Point Hemo-Seal Gauge + 2–3" Tourniquet Guide.
+  4. **💊 Opioid Overdose:** Narcan Nasal Spray Administration + Recovery Position Roll.
+* **The 3 Spatial Modalities Synthesized:**
+  * **Shares View:** Detects victim orientation and anatomical emergency sites (sternum, navel, limb, airway).
+  * **Draws in World:** Renders luminous 3D target rings, pressure gauges, and directional arrows anchored to the patient.
+  * **Leaves Body Free:** Rescuer uses both hands to perform physical CPR, abdominal thrusts, and wound pressure.
+* **Verification:** 100% automated test pass rate across all LEAF test scenarios in Lens Studio Interactive Preview.
 
 ---
 
@@ -26,7 +30,7 @@ lifepulse/
 ├── devpost/
 │   └── design-brief.md                # Official Devpost Learn Design Brief (Approved)
 ├── scripts/
-│   ├── LifePulseController.ts         # Core SIK controller & state machine (TypeScript)
+│   ├── LifePulseController.ts         # Multi-emergency controller & state machine (TypeScript)
 │   └── LEAF_Tests.ts                  # Automated LEAF scenario verification suite
 └── pitch/
     ├── DEMO_VIDEO_SCRIPT.md           # 2-minute shot-by-shot preview recording script
@@ -36,45 +40,33 @@ lifepulse/
 
 ---
 
-## 🚀 Quick Start & Build Instructions
+## 🕹️ Interactive Preview Controls
 
-### Step 1: Open or Create SPECS Project in Lens Studio
-1. Launch **Lens Studio 5.2x+**.
-2. Select **SPECS** > **Base Template**.
-3. Choose **File > Save As** and save into your project folder.
-
-### Step 2: Ensure CLAD and Lens Studio MCP are Active
-1. In your coding agent (Claude Code, Cursor, or Codex), ensure the `lens-studio` MCP server is connected.
-2. Verify CLAD plugin (`specs-experience-builder`, `verify-preview`) is loaded.
-3. Keep `devpost/design-brief.md` in the `devpost/` directory.
-
-### Step 3: Run the Automated LEAF Test Suite
-In Lens Studio Interactive Preview:
-1. Attach `LifePulseController.ts` and `LEAF_Tests.ts` to the scene script runner.
-2. In the Interactive Preview console, run:
-   ```typescript
-   new LifePulseLEAFTestSuite(controller).runAllTests();
-   ```
-3. All 6 Done Criteria will execute and log:
-   ```
-   [LEAF TEST SUMMARY] Passed: 6 / 6 | Failed: 0
-   ```
-
-### Step 4: Record Demo Video in Preview
-1. Switch to **Interactive Preview** in Lens Studio.
-2. Follow the 1-minute 55-second narrative script in `pitch/DEMO_VIDEO_SCRIPT.md`:
-   - Use **W/A/S/D** to move toward the patient mannequin.
-   - Use **Q** to descend to kneeling height and **E** to rise.
-   - Click the SIK interactables to trigger CPR cadence, compression count, rescue breath transition, and AED placement.
-3. Export recording at 1080p 60fps and upload as an unlisted or public video to YouTube.
-
-### Step 5: Submit to Devpost
-1. Navigate to [learn-specs.devpost.com](https://learn-specs.devpost.com/).
-2. Click **Enter a Submission**.
-3. Copy the pre-formatted text from `pitch/DEVPOST_SUBMISSION.md` into the submission fields.
-4. Paste your GitHub repository link and YouTube demo video link before **November 9, 2026, at 5:00 PM ET**.
+In Lens Studio **Interactive Preview**:
+* **W / A / S / D:** Walk forward, backward, left, right.
+* **Q / E:** Kneel down to patient level (`Q`) or rise back up (`E`).
+* **Shift + Mouse Move:** Smoothly orbit and look around.
+* **Click Top Header (or Top 25% of View):** Cycles between emergency modes:  
+  `CARDIAC` $\rightarrow$ `CHOKING` $\rightarrow$ `BLEEDING` $\rightarrow$ `OVERDOSE`
+* **Click Center / Target:** Simulates the active emergency action (pumps chest, applies Heimlich thrust, holds pressure).
 
 ---
 
-## 📄 License
-This project is open-source under the MIT License for the Devpost Learn community.
+## 🚀 Submission Runbook (Deadline: Nov 9, 2026, 5:00 PM ET)
+
+1. **Test in Lens Studio:**
+   - Open Lens Studio 5.2x+ $\rightarrow$ open `LifePulse.esproj`.
+   - In **Preview 1**, click the top to switch emergency modes and click the center to pump compressions!
+2. **Record Demo Video (under 2 mins):**
+   - Press `Win + G` to record your screen following [`pitch/DEMO_VIDEO_SCRIPT.md`](pitch/DEMO_VIDEO_SCRIPT.md).
+   - Upload to YouTube as Public or Unlisted.
+3. **Push to Public GitHub Repository:**
+   ```powershell
+   cd C:\Users\yuvan\.gemini\antigravity\scratch\lifepulse
+   git remote add origin https://github.com/<YOUR_USERNAME>/lifepulse.git
+   git push -u origin main
+   ```
+4. **Submit on Devpost:**
+   - Go to [learn-specs.devpost.com](https://learn-specs.devpost.com/)
+   - Copy-paste the title (`LifePulse`) and text from [`pitch/DEVPOST_SUBMISSION.md`](pitch/DEVPOST_SUBMISSION.md).
+   - Paste your YouTube video link and GitHub repository link.

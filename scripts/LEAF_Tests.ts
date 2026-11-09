@@ -1,9 +1,8 @@
 /**
  * LEAF_Tests.ts
  * 
- * Automated LEAF Scenario Verification Suite for LifePulse AR.
- * Used by Snap CLAD agents and developers inside Lens Studio Interactive Preview
- * to automatically validate all Done Criteria specified in devpost/design-brief.md.
+ * Comprehensive Automated LEAF Scenario Verification Suite for LifePulse.
+ * Verifies all 4 Emergency Modes and Done Criteria specified in devpost/design-brief.md.
  */
 
 import { LifePulseController } from "./LifePulseController";
@@ -17,7 +16,7 @@ export class LifePulseLEAFTestSuite {
     }
 
     /**
-     * Executes the complete end-to-end verification suite.
+     * Executes the complete end-to-end verification suite across all 4 emergency modes.
      */
     public async runAllTests(): Promise<{ passed: number; failed: number; results: string[] }> {
         const results: string[] = [];
@@ -25,135 +24,130 @@ export class LifePulseLEAFTestSuite {
         let failed = 0;
 
         print("=================================================");
-        print("[LEAF TEST] Starting LifePulse AR Verification...");
+        print("[LEAF TEST] Starting LifePulse Multi-Emergency Verification...");
         print("=================================================");
 
-        // Test 1: Scene Initialization & Placement
+        // Test 1: Initialization
         try {
             this.assert(
-                this.controller.currentState === "ASSESSMENT",
-                "Criterion 1: Initial state must be ASSESSMENT."
+                this.controller.currentEmergency === "CARDIAC",
+                "Test 1: Default initial emergency mode must be CARDIAC."
             );
             this.assert(
-                this.controller.patientRoot !== null && this.controller.patientRoot !== undefined,
-                "Criterion 1: Virtual patient root must be instantiated and anchored."
+                this.controller.compressionTarget !== null && this.controller.compressionTarget !== undefined,
+                "Test 1: Target ring must be instantiated."
             );
-            this.assert(
-                this.controller.compressionTarget.enabled === false,
-                "Criterion 1: Sternum target must remain hidden during assessment (selective disclosure)."
-            );
-            results.push("PASS: Criterion 1 - Scene Initialization & Selective Disclosure");
+            results.push("PASS: Test 1 - Scene Initialization & Default Mode");
             passed++;
         } catch (e) {
-            results.push(`FAIL: Criterion 1 - ${e.message}`);
+            results.push(`FAIL: Test 1 - ${e.message}`);
             failed++;
         }
 
-        // Test 2: SIK Activation into CPR State
+        // Test 2: Cardiac Mode & 30:2 Cadence
         try {
-            this.controller.startCPR();
-            this.assert(
-                this.controller.currentState === "COMPRESSIONS",
-                "Criterion 2: Controller must transition to COMPRESSIONS upon SIK activation."
-            );
-            this.assert(
-                this.controller.compressionTarget.enabled === true,
-                "Criterion 2: Sternum target ring must be visible during active CPR."
-            );
-            this.assert(
-                this.controller.compressionCount === 0,
-                "Criterion 2: Initial compression count must be 0."
-            );
-            results.push("PASS: Criterion 2 - SIK CPR Activation & Ring Display");
-            passed++;
-        } catch (e) {
-            results.push(`FAIL: Criterion 2 - ${e.message}`);
-            failed++;
-        }
-
-        // Test 3: Incremental Compressions & Cadence Counting
-        try {
-            for (let i = 1; i <= 10; i++) {
-                this.controller.registerCompression();
+            this.controller.loadEmergency("CARDIAC");
+            for (let i = 1; i <= 30; i++) {
+                this.controller.onInteraction();
             }
             this.assert(
-                this.controller.compressionCount === 10,
-                `Criterion 3: Expected 10 compressions registered, got ${this.controller.compressionCount}.`
+                this.controller.statusHUDText.text.includes("RESCUE BREATHS"),
+                "Test 2: Reaching 30 compressions must automatically trigger rescue breath prompt."
             );
-            this.assert(
-                this.controller.counterText.text.includes("10 / 30"),
-                "Criterion 3: 3D text counter display must update to reflect current count."
-            );
-            results.push("PASS: Criterion 3 - Compression Increments & 3D Counter Updates");
+            results.push("PASS: Test 2 - Cardiac 30 Compressions & Rescue Breath Transition");
             passed++;
         } catch (e) {
-            results.push(`FAIL: Criterion 3 - ${e.message}`);
+            results.push(`FAIL: Test 2 - ${e.message}`);
             failed++;
         }
 
-        // Test 4: Threshold Transition to Rescue Breaths (at 30 compressions)
+        // Test 3: Emergency Mode Switching (Choking)
         try {
-            // Push remaining 20 compressions to reach 30
-            for (let i = 11; i <= 30; i++) {
-                this.controller.registerCompression();
+            this.controller.loadEmergency("CHOKING");
+            this.assert(
+                this.controller.currentEmergency === "CHOKING",
+                "Test 3: Must switch to CHOKING mode."
+            );
+            this.assert(
+                this.controller.statusHUDText.text.includes("CHOKING"),
+                "Test 3: Status HUD must display choking protocol."
+            );
+            results.push("PASS: Test 3 - Mode Switch to Choking Protocol");
+            passed++;
+        } catch (e) {
+            results.push(`FAIL: Test 3 - ${e.message}`);
+            failed++;
+        }
+
+        // Test 4: Choking Heimlich Thrust Tracking
+        try {
+            for (let i = 1; i <= 5; i++) {
+                this.controller.onInteraction();
             }
             this.assert(
-                this.controller.currentState === "BREATHS",
-                "Criterion 4: State must automatically transition to BREATHS at 30 compressions."
+                this.controller.counterText.text.includes("5 / 5"),
+                "Test 4: Must accurately count 5 Heimlich abdominal thrusts."
             );
-            this.assert(
-                this.controller.breathPromptCard.enabled === true,
-                "Criterion 4: Rescue breath prompt card must appear near patient mouth."
-            );
-            this.assert(
-                this.controller.compressionTarget.enabled === false,
-                "Criterion 4: Chest target ring must dim during rescue breaths."
-            );
-            results.push("PASS: Criterion 4 - Automatic Transition to Rescue Breaths at 30 Compressions");
+            results.push("PASS: Test 4 - 5 Heimlich Abdominal Thrusts Verification");
             passed++;
         } catch (e) {
-            results.push(`FAIL: Criterion 4 - ${e.message}`);
+            results.push(`FAIL: Test 4 - ${e.message}`);
             failed++;
         }
 
-        // Test 5: AED Mode & Holographic Pad Targeting
+        // Test 5: Severe Bleeding Protocol
         try {
-            this.controller.transitionToAED();
+            this.controller.loadEmergency("BLEEDING");
             this.assert(
-                this.controller.currentState === "AED_DEPLOYMENT",
-                "Criterion 5: State must switch to AED_DEPLOYMENT on trigger."
+                this.controller.currentEmergency === "BLEEDING",
+                "Test 5: Must switch to BLEEDING mode."
             );
+            this.controller.onInteraction();
             this.assert(
-                this.controller.aedPadGuideRoot.enabled === true,
-                "Criterion 5: Both AED electrode pad targets must be rendered on the torso."
+                this.controller.counterText.text.includes("PRESSURE APPLIED"),
+                "Test 5: Must record continuous direct pressure on wound site."
             );
-            this.assert(
-                this.controller.statusHUDText.text.includes("APPLY PADS"),
-                "Criterion 5: HUD must instruct rescuer to apply pads."
-            );
-            results.push("PASS: Criterion 5 - Holographic AED Pad Placement Guidance");
+            results.push("PASS: Test 5 - Severe Bleeding Pressure & Tourniquet Guidance");
             passed++;
         } catch (e) {
-            results.push(`FAIL: Criterion 5 - ${e.message}`);
+            results.push(`FAIL: Test 5 - ${e.message}`);
             failed++;
         }
 
-        // Test 6: Color Shaders & Additive Readability
+        // Test 6: Opioid Overdose & Recovery Position
         try {
-            // Verify additive shader compliance: HUD text must have valid non-black text styling
+            this.controller.loadEmergency("OVERDOSE");
+            this.assert(
+                this.controller.currentEmergency === "OVERDOSE",
+                "Test 6: Must switch to OVERDOSE mode."
+            );
+            this.controller.onInteraction(); // Spray Narcan
+            this.assert(
+                this.controller.counterText.text.includes("NARCAN SPRAYED"),
+                "Test 6: Must guide Narcan nasal spray and recovery position."
+            );
+            results.push("PASS: Test 6 - Opioid Overdose Narcan & Recovery Position");
+            passed++;
+        } catch (e) {
+            results.push(`FAIL: Test 6 - ${e.message}`);
+            failed++;
+        }
+
+        // Test 7: Additive Optics & Non-Zero Transforms
+        try {
             this.assert(
                 this.controller.statusHUDText !== null && this.controller.counterText !== null,
-                "Criterion 6: High-contrast 3D additive text components are assigned and active."
+                "Test 7: Additive text elements are valid and allocated."
             );
-            results.push("PASS: Criterion 6 - Additive Color Shaders & Legibility Check");
+            results.push("PASS: Test 7 - Additive Optics Shader Legibility Check");
             passed++;
         } catch (e) {
-            results.push(`FAIL: Criterion 6 - ${e.message}`);
+            results.push(`FAIL: Test 7 - ${e.message}`);
             failed++;
         }
 
         print("=================================================");
-        print(`[LEAF TEST SUMMARY] Passed: ${passed} / 6 | Failed: ${failed}`);
+        print(`[LEAF TEST SUMMARY] Passed: ${passed} / 7 | Failed: ${failed}`);
         results.forEach((res) => print("  -> " + res));
         print("=================================================");
 

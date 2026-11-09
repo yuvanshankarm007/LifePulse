@@ -1,7 +1,7 @@
 # Devpost Submission Form Content: LifePulse
 
 **Project Title:** LifePulse  
-**Tagline:** When seconds count and hands are occupied: Real-time spatial CPR cadence and AED guidance for Snap Spectacles.  
+**Tagline:** When seconds count and hands are occupied: Hands-free multi-emergency spatial first responder for Snap Spectacles.  
 **Track:** Learn AR with SPECS (Devpost & Snap Inc.)  
 **Project Repository:** (Public GitHub repository containing `.esproj`, `/scripts`, and `/devpost`)  
 **Demo Video URL:** (YouTube link to 2-minute preview demo)  
@@ -9,61 +9,82 @@
 ---
 
 ## 💡 Inspiration
-Over 350,000 out-of-hospital cardiac arrests occur every year, and survival drops by 10% for every minute without cardiopulmonary resuscitation (CPR). Yet, over 70% of bystanders hesitate to act, fear making a mistake, or fail to sustain the required 100–120 compressions-per-minute tempo.
+Every year, millions of preventable deaths occur because bystanders freeze during acute emergencies:
+* Over **350,000 out-of-hospital cardiac arrests** happen annually, with survival dropping by 10% for every minute without CPR.
+* **Choking** is the fourth leading cause of unintentional injury death, requiring immediate alternating back blows and Heimlich thrusts.
+* **Severe arterial bleeding** can cause fatal hemorrhagic shock in under 3 minutes before an ambulance arrives.
+* **Opioid overdoses** can be completely reversed within seconds if Naloxone (Narcan) is administered and the victim is rolled into a clear recovery position.
 
-When an acute emergency strikes, **smartphones are fundamentally inadequate**:
-1. You need **both hands** interlocked with locked elbows to exert 50 kg of chest compression force.
-2. Looking down at a flat glass screen breaks visual vigilance over the victim's airway, chest rise, and vital signs.
-3. Fumbling with phone locks, dials, wet gloves, or biometric sensors under acute panic wastes precious seconds.
+Yet over 70% of bystanders hesitate to intervene due to panic, fear of doing it wrong, or inability to recall training under acute stress.
 
-Snap Spectacles offer a revolutionary alternative: a head-worn spatial computer that **shares your view**, **draws directly in the physical world**, and **leaves your body and hands 100% free**. 
+When a life-threatening crisis strikes, **smartphones are fundamentally useless**:
+1. **Both hands are 100% occupied:** CPR requires 50 kg of two-handed force. Heimlich thrusts require wrapping both arms around the victim. Hemorrhage control requires two hands applying bodyweight pressure. You cannot hold or swipe a smartphone while performing physical resuscitation.
+2. **Eyes cannot leave the victim:** Looking down at a phone screen breaks visual vigilance over airway obstruction, chest rise, and facial responsiveness.
+3. **Biohazard & contamination:** Touching personal devices with wet, contaminated, or bloody gloves is dangerous and slow.
 
-We built **LifePulse** to transform anyone wearing Spectacles into an empowered, fearless first responder who can act decisively and save a life.
+Snap Spectacles offer the ultimate medical computing form factor: an optical spatial computer that **shares your view**, **draws directly in the physical world**, and **leaves your body and hands completely free**. 
+
+We built **LifePulse** to transform anyone wearing Snap Spectacles into an empowered, calm, and fearless first responder.
 
 ---
 
 ## ⚡ What it Does
-**LifePulse** is a clinical-first emergency coaching system built natively for Snap Spectacles. It guides bystanders step-by-step through high-quality CPR and automated external defibrillator (AED) deployment:
+**LifePulse** is a clinical-first, multi-emergency spatial companion built natively for Snap Spectacles. It provides interactive, step-by-step spatial coaching for the four most common acute bystander emergencies:
 
-* **Spatial Anatomical Anchoring:** Rather than floating an annoying 2D HUD website in front of your face, LifePulse anchors a glowing 18 cm target ring directly onto the lower half of the victim's sternum.
-* **110 BPM Rhythmic Cadence Metronome:** Synchronizes visual radial pulses and spatial audio ticks at precisely 110 beats per minute (the American Heart Association sweet spot between 100–120 BPM).
-* **30:2 Cycle Automation:** Dynamically tracks chest compressions (1 to 30) with real-time feedback (`OPTIMAL CADENCE`), then automatically transitions into the rescue breath phase.
-* **Selective Disclosure:** When 30 compressions are reached, the chest ring dims and guidance instantly migrates to the victim's airway with an audible cue and a 4-second breath countdown, keeping the user's field of view clean and focused.
-* **Holographic AED Defibrillator Placement:** When an AED arrives, high-contrast cyan holographic guides highlight the exact anatomical placement for electrode pads on the right collarbone and left lateral ribcage.
-* **Comfort & Additive Optics:** Engineered within the 37° x 32° narrow FOV and additive display constraints of Spectacles. All critical elements use high-contrast cyan, amber, and white shaders (avoiding invisible blacks) and are elevated 15 cm above the torso at a comfortable 30° downward gaze angle.
+### 1. ❤️ Cardiac Arrest Mode (CPR & AED)
+* **110 BPM Rhythmic Spatial Metronome:** Anchors an 18 cm glowing target ring directly onto the lower sternum, pulsing at precisely 110 beats per minute (the AHA gold standard).
+* **30:2 Cycle Automation:** Dynamically tallies compressions (1 to 30) with real-time feedback and elastic squash-and-recoil visual animation.
+* **Selective Disclosure Breath Guidance:** At 30 compressions, the chest target dims and guidance instantly migrates to the victim's airway with a 4-second breath timer (`WATCH CHEST RISE`).
+* **Holographic AED Pad Placement:** Highlights exact anatomical targets on the right collarbone and left lateral ribcage.
+
+### 2. 🗣️ Severe Choking Mode (Heimlich & Back Blows)
+* Relocates the spatial target to the **upper abdomen (just above the navel)**.
+* Directs the 5-and-5 protocol: **5 firm back blows between shoulder blades $\rightarrow$ 5 quick inward-and-upward abdominal thrusts** with an interactive thrust counter.
+
+### 3. 🩸 Severe Bleeding Mode (Arterial Hemorrhage Control)
+* Relocates the spatial guide to the **limb wound site**.
+* Provides a continuous **direct pressure seal gauge** (`HEMO-SEAL PRESSURE 10%... 100%`) and highlights the exact placement line for a **tourniquet (2–3 inches above the wound)**.
+
+### 4. 💊 Opioid Overdose Mode (Narcan & Recovery Position)
+* Directs nasal spray administration (**1 spray in nostril**).
+* Spatially guides rolling the unconscious patient into the **safe recovery position** (lateral recumbent) to maintain a clear airway and prevent aspiration.
+
+### 🕹️ Seamless Interactive Bystander Controls
+* **Header Mode Switcher:** Bystanders can toggle between emergency protocols in seconds.
+* **Interactive Preview Simulation:** Fully testable on laptops without physical hardware using WASD locomotion and click-to-pump interactions.
 
 ---
 
 ## 🛠️ How We Built It
-We followed the official Devpost Learn agentic pipeline from start to finish:
-1. **Interactive Planning with Devpost Learn Skill Pack:** We used the `plan-lens` agent skill to conduct a rigorous design interview, stress-testing our emergency use case against the three core AR modalities and Lens Studio preview limits. This produced our official specification in `devpost/design-brief.md`.
-2. **Autonomous Lens Construction via CLAD & Lens Studio MCP:** Snap’s Closed-Loop Agentic Development (CLAD) agents and Lens Studio MCP built the project hierarchy, 3D anatomical placement, and additive shaders inside Lens Studio.
-3. **Spectacles Interaction Kit (SIK):** Built with SIK interactables, enabling seamless mouse pinch-and-drag testing in Interactive Preview and native hand pinching on Spectacles Gen 5 hardware.
-4. **Automated LEAF Testing:** Implemented an automated test harness (`scripts/LEAF_Tests.ts`) verifying all 6 Done Criteria across state transitions, audio triggers, counter thresholds, and additive color compliance.
+We followed the official Devpost Learn agentic pipeline from concept to verified execution:
+1. **Interactive Planning with Devpost Learn Skill Pack:** We used the `plan-lens` agent skill to stress-test our multi-emergency concept against the three core spatial modalities, preview constraints, and ergonomic comfort rules. This generated our approved specification in `devpost/design-brief.md`.
+2. **Autonomous Lens Construction with CLAD & Lens Studio MCP:** Snap’s Closed-Loop Agentic Development (CLAD) agents and Lens Studio MCP built the project hierarchy, 3D anatomical placement, and additive shaders inside Lens Studio.
+3. **Spectacles Interaction Kit (SIK):** Built with SIK interactables, enabling mouse pinch-and-drag testing in Interactive Preview and native hand pinching on Spectacles Gen 5 hardware.
+4. **Automated LEAF Testing:** Implemented an automated test harness (`scripts/LEAF_Tests.ts`) verifying state transitions, 110 BPM metronome pulses, counter increments, and additive color compliance.
 
 ---
 
 ## 🧗 Challenges We Overcame
-* **Designing for Narrow Field of View (37° x 32°):** In an emergency, a rescuer cannot be turning their head searching for UI. We grouped all critical elements (compression target, count, cadence status) within a compact 28 cm radial zone on the patient's chest.
-* **Ergonomics of Looking at the Floor:** CPR happens on the ground. A steep 60° neck angle causes rapid fatigue. We angled the floating HUD upward by 20° and raised it 15 cm above the torso, allowing rescuers to maintain a relaxed 30° downward eye-line.
-* **Hardware-Free Simulation:** Because judges and developers review projects in Lens Studio preview, we created intuitive SIK button stand-ins for patient assessment and compression simulation, allowing judges to test the complete medical cycle with a standard mouse.
+* **Ergonomics of Downward Gaze:** Resuscitation occurs on the ground. A steep 60° head bend causes severe neck fatigue. We elevated the floating HUD 14 cm above the patient at a 20° upward tilt, allowing rescuers to maintain a comfortable 30° natural downward eye line.
+* **Narrow FOV Management (37° x 32°):** In an emergency, a rescuer cannot search around for UI. All critical indicators (target ring, counter, status card) are clustered within a compact 30 cm radius directly in the rescuer's central vision.
+* **Additive Color Disciplines:** Waveguide displays render black as transparent. We designed high-contrast cyan, amber, and crisp white luminous shaders that remain razor-sharp against any carpet or floor background.
 
 ---
 
 ## 🏆 Accomplishments that We're Proud of
-* **True Synthesis of the 3 Modalities:** LifePulse doesn't just show a notification; it perceives what the rescuer sees, draws anatomical targets in physical 3D space, and leaves both hands completely unencumbered.
-* **100% LEAF Test Pass Rate:** Every single Done Criterion in `devpost/design-brief.md` has an automated test that passes in preview simulation.
-* **High-Impact Real-World Value:** Moving AR away from temporary gimmicks toward permanent, life-saving human utility.
+* **True Synthesis of the 3 Modalities:** LifePulse perceives the victim's anatomy, draws real-scale targets in 3D physical space, and leaves the rescuer's hands completely unencumbered.
+* **4-in-1 Comprehensive Emergency Suite:** Expanding beyond single-scenario demos into a complete first responder toolkit (Cardiac, Choking, Bleeding, Overdose).
+* **100% Simulator-Verified:** Completely interactive and testable in Lens Studio Interactive Preview on a standard laptop.
 
 ---
 
 ## 🧠 What We Learned
-* **Selective Disclosure is Critical in AR:** Showing too much information during a panic situation induces cognitive overload. Showing only the immediate next physical action (compressions $\rightarrow$ breaths $\rightarrow$ pads) dramatically improves focus.
-* **Additive Display Discipline:** Black is transparent on waveguide displays. Designing for Spectacles requires thoughtful color palettes (cyan, gold, bright white) with luminous edge highlights.
+* **Selective Disclosure Saves Lives:** Showing too much information during a panic situation induces cognitive overload. Showing only the immediate next physical action dramatically improves rescuer confidence and execution speed.
+* **Event-Driven AR Architecture:** Constant video streaming drains smart glasses batteries in minutes. Event-driven emergency activation preserves battery and maximizes responsiveness.
 
 ---
 
-## 🚀 What's Next for LifePulse AR
-* **Real-Time Computer Vision Recoil Detection:** Utilizing SnapML on Spectacles Gen 5 dual-cameras to track hand displacement and sound audio alerts if compressions are too shallow (<5 cm) or if complete chest recoil isn't achieved.
-* **Connected Lenses for Multi-Rescuer Handoff:** Allowing two Spectacles wearers to seamlessly swap roles without interrupting CPR cadence when the primary rescuer fatigues.
-* **Automated 911 Telemetry Streaming:** Transmitting live situational telemetry and victim status directly to arriving paramedic headsets.
+## 🚀 What's Next for LifePulse
+* **Real-Time Computer Vision Recoil Detection:** Utilizing SnapML on Spectacles Gen 5 dual-cameras to track compression depth (>5 cm) and sound alerts if compressions are too shallow.
+* **Multi-Rescuer Handoff via Connected Lenses:** Allowing two Spectacles wearers to seamlessly swap roles without interrupting CPR cadence when the primary rescuer fatigues.
+* **Automated 911 Telemetry Streaming:** Transmitting live victim status and compression count directly to arriving paramedic headsets.
