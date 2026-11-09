@@ -8,3 +8,7 @@ LifePulse/Temp/
 LifePulse/*.lock
 node_modules/
 npm-debug.log*
+
+LifePulse/.gitattributes
+
+LifePulse/.gitattributes
