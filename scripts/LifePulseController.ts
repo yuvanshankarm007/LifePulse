@@ -27,6 +27,8 @@ export class LifePulseController extends BaseScriptComponent {
     @input compressionTarget?: SceneObject;
     @input counterText?: Text3D;
     @input statusHUDText?: Text3D;
+    @input btnStartCPR?: SceneObject;
+    @input btnSimulateCompression?: SceneObject;
 
     // Active Emergency State
     public currentEmergency: EmergencyType = "CARDIAC";

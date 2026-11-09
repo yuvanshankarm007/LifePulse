@@ -28,8 +28,6 @@
   ExportUid: 00000000-0000-0000-0000-000000000000
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
-    btnSimulateCompression: false
-    btnStartCPR: false
     compressionTarget: false
     counterText: false
     patientRoot: false
@@ -47,8 +45,6 @@
       compressionTarget: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
       counterText: !<reference.Text3D> 00000000-0000-0000-0000-000000000000
       statusHUDText: !<reference.Text3D> 00000000-0000-0000-0000-000000000000
-      btnStartCPR: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
-      btnSimulateCompression: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
   ScriptTypes:
     -
       {}
