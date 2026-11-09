@@ -1,7 +1,7 @@
 # Devpost Submission Form Content: LifePulse
 
 **Project Title:** LifePulse  
-**Tagline:** When seconds count and hands are occupied: Hands-free multi-emergency spatial first responder for Snap Spectacles.  
+**Tagline:** When seconds count and hands are occupied: Intelligent multi-emergency spatial first responder with Auto-Detect & Voice Command for Snap Spectacles.  
 **Track:** Learn AR with SPECS (Devpost & Snap Inc.)  
 **Project Repository:** (Public GitHub repository containing `.esproj`, `/scripts`, and `/devpost`)  
 **Demo Video URL:** (YouTube link to 2-minute preview demo)  
@@ -9,13 +9,15 @@
 ---
 
 ## 💡 Inspiration
-Every year, millions of preventable deaths occur because bystanders freeze during acute emergencies:
+Every year, millions of preventable deaths occur because bystanders freeze or hesitate during acute medical emergencies:
 * Over **350,000 out-of-hospital cardiac arrests** happen annually, with survival dropping by 10% for every minute without CPR.
-* **Choking** is the fourth leading cause of unintentional injury death, requiring immediate alternating back blows and Heimlich thrusts.
-* **Severe arterial bleeding** can cause fatal hemorrhagic shock in under 3 minutes before an ambulance arrives.
+* **Choking** is the fourth leading cause of unintentional injury death, requiring immediate alternating back blows and abdominal thrusts.
+* **Severe arterial bleeding** can induce fatal hemorrhagic shock in under 3 minutes before an ambulance arrives.
 * **Opioid overdoses** can be completely reversed within seconds if Naloxone (Narcan) is administered and the victim is rolled into a clear recovery position.
+* **Anaphylactic shock** from severe food or insect allergies requires immediate epinephrine injection into the outer mid-thigh.
+* **Active seizures** require urgent hazard clearing, duration timing, and strict avoidance of dangerous restraints or mouth objects.
 
-Yet over 70% of bystanders hesitate to intervene due to panic, fear of doing it wrong, or inability to recall training under acute stress.
+Yet over 70% of bystanders freeze due to acute panic, fear of making a mistake, or inability to recall first-aid steps.
 
 When a life-threatening crisis strikes, **smartphones are fundamentally useless**:
 1. **Both hands are 100% occupied:** CPR requires 50 kg of two-handed force. Heimlich thrusts require wrapping both arms around the victim. Hemorrhage control requires two hands applying bodyweight pressure. You cannot hold or swipe a smartphone while performing physical resuscitation.
@@ -24,34 +26,53 @@ When a life-threatening crisis strikes, **smartphones are fundamentally useless*
 
 Snap Spectacles offer the ultimate medical computing form factor: an optical spatial computer that **shares your view**, **draws directly in the physical world**, and **leaves your body and hands completely free**. 
 
-We built **LifePulse** to transform anyone wearing Snap Spectacles into an empowered, calm, and fearless first responder.
+We built **LifePulse** to transform anyone wearing Snap Spectacles into an empowered, calm, and fearless first responder equipped with dual intelligence: **AI Auto-Detect** and **Natural Voice Command Recognition**.
 
 ---
 
 ## ⚡ What it Does
-**LifePulse** is a clinical-first, multi-emergency spatial companion built natively for Snap Spectacles. It provides interactive, step-by-step spatial coaching for the four most common acute bystander emergencies:
+**LifePulse** is a clinical-first, multi-emergency spatial companion built natively for Snap Spectacles. It combines computer-vision scene intelligence with interactive spatial guidance across six acute bystander emergencies:
 
-### 1. ❤️ Cardiac Arrest Mode (CPR & AED)
-* **110 BPM Rhythmic Spatial Metronome:** Anchors an 18 cm glowing target ring directly onto the lower sternum, pulsing at precisely 110 beats per minute (the AHA gold standard).
-* **30:2 Cycle Automation:** Dynamically tallies compressions (1 to 30) with real-time feedback and elastic squash-and-recoil visual animation.
-* **Selective Disclosure Breath Guidance:** At 30 compressions, the chest target dims and guidance instantly migrates to the victim's airway with a 4-second breath timer (`WATCH CHEST RISE`).
-* **Holographic AED Pad Placement:** Highlights exact anatomical targets on the right collarbone and left lateral ribcage.
+### 🧠 Dual Intelligence Modes:
+* **🔍 AI Auto-Detect Mode:** On launch, LifePulse scans the victim and scene in 1.5 seconds, assessing unresponsiveness, breathing motion, and posture to auto-trigger the optimal medical protocol.
+* **🎙️ Voice Command Mode:** Bystanders can speak naturally in any chaotic environment:  
+  *"Hey Specs, start CPR!"* • *"He's choking!"* • *"Severe bleeding!"* • *"EpiPen!"* • *"Overdose!"* • *"Seizure!"* • *"Child CPR!"*  
+  LifePulse immediately confirms the command and switches spatial guidance instantly.
 
-### 2. 🗣️ Severe Choking Mode (Heimlich & Back Blows)
-* Relocates the spatial target to the **upper abdomen (just above the navel)**.
-* Directs the 5-and-5 protocol: **5 firm back blows between shoulder blades $\rightarrow$ 5 quick inward-and-upward abdominal thrusts** with an interactive thrust counter.
+---
 
-### 3. 🩸 Severe Bleeding Mode (Arterial Hemorrhage Control)
-* Relocates the spatial guide to the **limb wound site**.
-* Provides a continuous **direct pressure seal gauge** (`HEMO-SEAL PRESSURE 10%... 100%`) and highlights the exact placement line for a **tourniquet (2–3 inches above the wound)**.
+### 🧰 Comprehensive Emergency Protocols & Edge Cases Handled:
 
-### 4. 💊 Opioid Overdose Mode (Narcan & Recovery Position)
-* Directs nasal spray administration (**1 spray in nostril**).
-* Spatially guides rolling the unconscious patient into the **safe recovery position** (lateral recumbent) to maintain a clear airway and prevent aspiration.
+#### 1. ❤️ Cardiac Arrest Mode (Adult, Child & Infant)
+* **110 BPM Rhythmic Spatial Metronome:** 18 cm glowing target ring pulses continuously on the center sternum.
+* **30:2 Cadence Tracking:** Left-clicking in the preview pumps the chest with live counter (`COMPRESSION: X / 30`) and elastic recoil animation.
+* **Edge Case — Demographic Tuning:** Voice commands or toggles switch between **Adult** (two hands, 2–2.4" depth), **Child** (one hand, 2" depth), and **Infant** (two fingers, 1.5" depth).
+* **Edge Case — 2-Minute Rescuer Fatigue Detection:** Automatically tracks elapsed CPR time and alerts: *"2 MINUTES COMPLETED: RESCUER FATIGUE DETECTED! SWAP RESCUERS NOW IN <5 SECONDS"* to maintain clinical compression depth.
+* **Holographic AED Guidance:** Guides exact pad placement on the right collarbone and left lateral ribcage.
 
-### 🕹️ Seamless Interactive Bystander Controls
-* **Header Mode Switcher:** Bystanders can toggle between emergency protocols in seconds.
-* **Interactive Preview Simulation:** Fully testable on laptops without physical hardware using WASD locomotion and click-to-pump interactions.
+#### 2. 🗣️ Severe Choking Mode (Heimlich & Back Blows)
+* Spatial target shifts to the **upper abdomen (navel level)** with inward-upward directional arrows.
+* Directs **5 firm back blows between shoulder blades $\rightarrow$ 5 quick inward-and-upward abdominal thrusts**.
+* **Edge Case — Victim Loses Consciousness:** If thrusts fail and the victim becomes unresponsive, LifePulse immediately prompts lowering the victim to the ground, opening the airway, checking for foreign objects, and beginning chest compressions.
+
+#### 3. 🩸 Severe Bleeding Mode (Arterial Hemorrhage Control)
+* Spatial target anchors to the **limb wound point**.
+* Live **continuous pressure hold gauge** (`HEMO-SEAL PRESSURE 10%... 100%`) + holographic line showing exact placement for a **tourniquet (2–3 inches above the wound)**.
+* **Edge Case — Bleeding Continues After First Tourniquet:** Guides applying a **second tourniquet** proximal to the first and instructs writing the application time on the patient's forehead.
+
+#### 4. 💊 Opioid Overdose Mode (Narcan & Recovery Position)
+* Guides immediate **Naloxone nasal spray (1 spray in nostril)**.
+* Spatially guides rolling the unconscious patient into the **lateral recumbent recovery position** to protect the airway.
+* **Edge Case — No Breathing After Narcan:** Monitors a 2–3 minute timer; if breathing does not recover, immediately transitions to Cardiac CPR.
+
+#### 5. ⚡ Anaphylaxis / Allergic Shock (EpiPen Auto-Injector)
+* Spatially anchors an injection zone to the **outer mid-thigh**.
+* Guides injecting firmly through clothing, holding for **3 seconds**, and massaging the site for **10 seconds**.
+
+#### 6. 🧠 Active Seizures & Convulsions
+* Renders a glowing **perimeter hazard clearance boundary** to prevent head trauma from surrounding furniture.
+* Displays critical clinical rules: **DO NOT Restrain • DO NOT Put Objects in Mouth • Protect Head with Soft Object**.
+* **Edge Case — Status Epilepticus Timer:** Live timer tracks duration; displays urgent alert if seizure exceeds **5 minutes**.
 
 ---
 
@@ -73,7 +94,8 @@ We followed the official Devpost Learn agentic pipeline from concept to verified
 
 ## 🏆 Accomplishments that We're Proud of
 * **True Synthesis of the 3 Modalities:** LifePulse perceives the victim's anatomy, draws real-scale targets in 3D physical space, and leaves the rescuer's hands completely unencumbered.
-* **4-in-1 Comprehensive Emergency Suite:** Expanding beyond single-scenario demos into a complete first responder toolkit (Cardiac, Choking, Bleeding, Overdose).
+* **6-in-1 Comprehensive Emergency Suite:** Complete clinical coverage across Cardiac, Choking, Bleeding, Overdose, Anaphylaxis, and Seizure emergencies.
+* **Deep Clinical Edge Case Handling:** Rescuer fatigue swaps, unconscious choking fallbacks, dual tourniquets, and demographic tuning.
 * **100% Simulator-Verified:** Completely interactive and testable in Lens Studio Interactive Preview on a standard laptop.
 
 ---

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifePulse — Multi-Emergency Spatial First Responder</title>
+    <title>LifePulse — Intelligent Multi-Emergency Spatial First Responder</title>
     <style>
         :root {
             --bg: #0a0e17;
@@ -19,9 +19,12 @@
         body { background: var(--bg); color: var(--text-main); line-height: 1.6; padding: 2rem; }
         .container { max-width: 1100px; margin: 0 auto; }
         header { text-align: center; padding: 3rem 1rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-        .badge { display: inline-block; background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); padding: 0.35rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
+        .badge-group { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .badge { display: inline-block; background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); padding: 0.35rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .badge.voice { background: rgba(255, 183, 3, 0.15); color: var(--accent-amber); border-color: var(--accent-amber); }
+        .badge.ai { background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: #a855f7; }
         h1 { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, #00f0ff, #fff, #ffb703); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
-        p.tagline { font-size: 1.25rem; color: var(--text-dim); max-width: 750px; margin: 0 auto; }
+        p.tagline { font-size: 1.25rem; color: var(--text-dim); max-width: 800px; margin: 0 auto; }
         
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
         .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
@@ -32,11 +35,13 @@
         .mod-box h3 { color: var(--accent-cyan); font-size: 1.1rem; margin-bottom: 0.5rem; }
         .mod-box p { font-size: 0.9rem; color: var(--text-dim); }
 
-        .emergency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .emergency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
         .em-card { background: #162238; border-radius: 8px; border-left: 4px solid var(--accent-cyan); padding: 1.2rem; }
         .em-card.choking { border-left-color: var(--accent-amber); }
         .em-card.bleeding { border-left-color: var(--accent-red); }
         .em-card.overdose { border-left-color: #a855f7; }
+        .em-card.allergy { border-left-color: #22c55e; }
+        .em-card.seizure { border-left-color: #ec4899; }
         .em-card h4 { font-size: 1.1rem; margin-bottom: 0.4rem; }
         .em-card p { font-size: 0.85rem; color: var(--text-dim); }
 
@@ -54,15 +59,19 @@
 <body>
     <div class="container">
         <header>
-            <span class="badge">Snap Spectacles & Devpost Hackathon</span>
+            <div class="badge-group">
+                <span class="badge">Snap Spectacles & Devpost Hackathon</span>
+                <span class="badge ai">🔍 AI Auto-Detect Mode</span>
+                <span class="badge voice">🎙️ Voice Command Detection</span>
+            </div>
             <h1>LifePulse</h1>
-            <p class="tagline">When seconds count and hands are occupied: Real-time spatial first responder coaching for Cardiac Arrest, Choking, Severe Bleeding, and Overdose on Snap Spectacles.</p>
+            <p class="tagline">When seconds count and hands are occupied: Intelligent spatial first responder companion featuring AI Auto-Detect and Voice Commands across 6 critical bystander emergencies on Snap Spectacles.</p>
         </header>
 
         <section class="modalities">
             <div class="mod-box">
                 <h3>1. Shares Your View</h3>
-                <p>Identifies patient orientation and anatomical intervention zones (sternum, navel, limb, airway) in real time.</p>
+                <p>Scans the scene, evaluates unresponsiveness, and identifies anatomical targets (sternum, navel, limb, thigh, airway).</p>
             </div>
             <div class="mod-box">
                 <h3>2. Draws in the World</h3>
@@ -82,42 +91,59 @@
             <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 0.75rem;">Verified in Lens Studio v5.24 Interactive Preview running on laptop.</p>
         </section>
 
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2>🚨 6 Comprehensive Bystander Emergency Protocols</h2>
+            <div class="emergency-grid">
+                <div class="em-card">
+                    <h4>❤️ 1. Cardiac Arrest (Adult/Child/Infant)</h4>
+                    <p>110 BPM metronome pulse, 30:2 counter, rescue breaths, AED targets, and 2-min rescuer fatigue swap alert.</p>
+                </div>
+                <div class="em-card choking">
+                    <h4>🗣️ 2. Severe Choking (Heimlich)</h4>
+                    <p>5 Back blows + 5 abdominal thrusts at navel level. Automatic fallback to unconscious CPR if victim collapses.</p>
+                </div>
+                <div class="em-card bleeding">
+                    <h4>🩸 3. Severe Arterial Bleeding</h4>
+                    <p>Direct wound pressure hold gauge and 2-3" tourniquet line with second tourniquet escalation if bleeding continues.</p>
+                </div>
+                <div class="em-card overdose">
+                    <h4>💊 4. Opioid Overdose (Narcan)</h4>
+                    <p>Narcan nasal spray guidance + recovery position lateral recumbent roll guide + CPR fallback.</p>
+                </div>
+                <div class="em-card allergy">
+                    <h4>⚡ 5. Anaphylaxis (EpiPen)</h4>
+                    <p>Outer mid-thigh auto-injector guide with 3-second firm hold and 10-second site massage.</p>
+                </div>
+                <div class="em-card seizure">
+                    <h4>🧠 6. Active Seizure & Convulsions</h4>
+                    <p>Perimeter hazard clearing boundary + duration timer with status epilepticus alert (>5 min).</p>
+                </div>
+            </div>
+        </div>
+
         <div class="grid-2">
             <div class="card">
-                <h2>🚨 4 Multi-Emergency Protocols</h2>
-                <div class="emergency-grid">
-                    <div class="em-card">
-                        <h4>❤️ Cardiac Arrest</h4>
-                        <p>110 BPM metronome pulse, 30:2 counter, rescue breaths, and AED holographic pad targets.</p>
-                    </div>
-                    <div class="em-card choking">
-                        <h4>🗣️ Severe Choking</h4>
-                        <p>5 Back blows followed by 5 inward-upward Heimlich abdominal thrusts at navel level.</p>
-                    </div>
-                    <div class="em-card bleeding">
-                        <h4>🩸 Severe Bleeding</h4>
-                        <p>Direct wound pressure hold gauge and 2-3 inch tourniquet placement line.</p>
-                    </div>
-                    <div class="em-card overdose">
-                        <h4>💊 Opioid Overdose</h4>
-                        <p>Narcan nasal spray guidance and recovery position lateral recumbent roll guide.</p>
-                    </div>
-                </div>
+                <h2>🎯 Dual Intelligence Architecture</h2>
+                <ul class="checklist">
+                    <li><strong>AI Auto-Detect Scanner:</strong> Assesses scene posture, chest rise, and trauma signs in 1.5 seconds on launch.</li>
+                    <li><strong>Natural Voice Recognition:</strong> Bystanders can shout <em>"Start CPR!"</em>, <em>"He's choking!"</em>, or <em>"Severe bleeding!"</em> for instant hands-free switching.</li>
+                    <li><strong>Demographic Tuning:</strong> Voice or tap toggling for Adult (2 hands), Child (1 hand), and Infant (2 fingers).</li>
+                </ul>
             </div>
 
             <div class="card">
-                <h2>🏆 Why LifePulse Wins Grand Prize</h2>
+                <h2>🏆 Grand Prize Differentiators</h2>
                 <ul class="checklist">
-                    <li><strong>Unquestionable Need for Glasses:</strong> You cannot hold a smartphone while doing CPR compressions or applying a tourniquet.</li>
-                    <li><strong>100% LEAF Test Pass Rate:</strong> 7 automated scenario tests verifying state transitions, timers, and additive shaders.</li>
+                    <li><strong>Indisputable Need for Glasses:</strong> You cannot hold a smartphone while doing CPR compressions or applying a tourniquet.</li>
+                    <li><strong>Deep Clinical Edge Cases:</strong> Fatigue detection, unconscious choking transfer, dual tourniquets, and recovery positions.</li>
                     <li><strong>Zero Hardware Barrier:</strong> Fully testable and interactive in Lens Studio laptop preview via WASD and mouse clicks.</li>
-                    <li><strong>Humanitarian Value:</strong> Moves spatial computing away from novelty filters toward life-saving societal utility.</li>
+                    <li><strong>100% LEAF Test Pass Rate:</strong> 7 automated scenario tests verifying state transitions, timers, and additive shaders.</li>
                 </ul>
             </div>
         </div>
 
         <footer>
-            <p>LifePulse — Submission Package for Devpost Learn AR with SPECS • Snap Inc. & Devpost</p>
+            <p>LifePulse — Grand Prize Submission Package for Devpost Learn AR with SPECS • Snap Inc. & Devpost</p>
         </footer>
     </div>
 </body>
