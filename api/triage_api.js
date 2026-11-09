@@ -554,6 +554,137 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    if (parsedUrl.pathname === '/' || parsedUrl.pathname === '/test') {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifePulse - Live AI Clinical Triage Workbench</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#030712; color:#f8fafc; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif; padding:30px; }
+        .container { max-width:850px; margin:0 auto; }
+        .header { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(0,240,255,0.3); padding-bottom:18px; margin-bottom:24px; }
+        .title { font-size:28px; font-weight:800; color:#fff; }
+        .title span { color:#00f0ff; text-shadow:0 0 10px rgba(0,240,255,0.5); }
+        .badge { background:rgba(0,240,255,0.15); border:1px solid #00f0ff; color:#00f0ff; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700; }
+        .input-box { display:flex; gap:10px; margin-bottom:20px; }
+        input { flex:1; background:#0f172a; border:1px solid #334155; color:#fff; padding:14px 18px; border-radius:8px; font-size:15px; outline:none; transition:0.2s; }
+        input:focus { border-color:#00f0ff; box-shadow:0 0 10px rgba(0,240,255,0.3); }
+        button { background:#00f0ff; color:#030712; border:none; padding:14px 24px; border-radius:8px; font-weight:800; font-size:15px; cursor:pointer; transition:0.2s; }
+        button:hover { background:#38bdf8; box-shadow:0 0 15px rgba(0,240,255,0.6); }
+        .chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
+        .chip { background:#1e293b; border:1px solid #334155; color:#94a3b8; padding:6px 14px; border-radius:16px; font-size:12px; cursor:pointer; font-weight:600; }
+        .chip:hover { border-color:#00f0ff; color:#fff; }
+        .card { background:#0b1329; border:1px solid rgba(0,240,255,0.3); border-radius:12px; padding:24px; margin-top:20px; position:relative; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+        .meta-bar { display:flex; justify-content:space-between; margin-bottom:16px; font-size:13px; color:#94a3b8; border-bottom:1px solid #1e293b; padding-bottom:10px; }
+        .engine-pill { color:#10b981; font-weight:700; }
+        .ar-title { font-size:24px; font-weight:900; color:#38bdf8; letter-spacing:1px; margin-bottom:10px; }
+        .instruction { font-size:18px; font-weight:800; color:#ffffff; background:#1e293b; padding:12px 16px; border-radius:8px; border-left:4px solid #00f0ff; margin-bottom:16px; }
+        .grid-props { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:16px; }
+        .prop-box { background:#0f172a; padding:12px; border-radius:6px; border:1px solid #1e293b; }
+        .prop-label { font-size:11px; color:#64748b; text-transform:uppercase; font-weight:700; margin-bottom:4px; }
+        .prop-val { font-size:15px; color:#f8fafc; font-weight:700; }
+        .warning-box { background:rgba(239,68,68,0.1); border:1px solid #ef4444; color:#fca5a5; padding:12px 16px; border-radius:8px; font-size:14px; font-weight:600; margin-top:12px; }
+        .contra-box { background:rgba(245,158,11,0.1); border:1px solid #f59e0b; color:#fcd34d; padding:12px 16px; border-radius:8px; font-size:14px; font-weight:600; margin-top:8px; }
+        pre { background:#020617; padding:16px; border-radius:8px; font-size:12px; color:#94a3b8; overflow-x:auto; margin-top:20px; border:1px solid #1e293b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1 class="title">Life<span>Pulse</span></h1>
+                <p style="color:#64748b; font-size:13px; margin-top:4px;">Snap Spectacles AR • Live AI Clinical Triage Workbench</p>
+            </div>
+            <div class="badge">● LIVE AI ACTIVE</div>
+        </div>
+
+        <div class="input-box">
+            <input type="text" id="queryInput" placeholder="Describe an emergency: e.g., 'Collapsed in gym, not breathing, no pulse'" value="Person collapsed on floor, unresponsive, no pulse" />
+            <button onclick="runTriage()">Triage (Live AI)</button>
+        </div>
+
+        <div class="chips">
+            <span style="color:#64748b; font-size:12px; line-height:26px;">Quick Tests:</span>
+            <div class="chip" onclick="setQuery('Person collapsed on floor, unresponsive, no pulse')">❤️ Cardiac Arrest</div>
+            <div class="chip" onclick="setQuery('Child swallowed grape, choking, silent hands on neck')">🗣️ Choking</div>
+            <div class="chip" onclick="setQuery('Deep cut on forearm from glass, bright red blood spurting')">🩸 Arterial Bleed</div>
+            <div class="chip" onclick="setQuery('Found unresponsive with blue lips and pinpoint pupils, suspected opioid')">💊 Overdose (Narcan)</div>
+            <div class="chip" onclick="setQuery('Ate peanuts, lips and throat swelling, wheezing and turning pale')">⚡ Anaphylaxis (EpiPen)</div>
+            <div class="chip" onclick="setQuery('Shaking violently on ground with convulsions for 2 minutes')">🧠 Seizure</div>
+            <div class="chip" onclick="setQuery('Spilled boiling soup all over chest and arms, blistering')">🔥 Thermal Burn</div>
+        </div>
+
+        <div id="resultArea"></div>
+    </div>
+
+    <script>
+        async function runTriage() {
+            const q = document.getElementById('queryInput').value.trim();
+            if (!q) return;
+            const resArea = document.getElementById('resultArea');
+            resArea.innerHTML = '<div style="color:#00f0ff; text-align:center; padding:30px; font-weight:700;">Querying Live AI Model (Groq / Gemini)...</div>';
+            
+            try {
+                const res = await fetch('/api/triage?query=' + encodeURIComponent(q));
+                const data = await res.json();
+                renderResult(data);
+            } catch(e) {
+                resArea.innerHTML = '<div style="color:#ef4444; padding:20px;">Error: ' + e.message + '</div>';
+            }
+        }
+
+        function setQuery(text) {
+            document.getElementById('queryInput').value = text;
+            runTriage();
+        }
+
+        function renderResult(data) {
+            const t = data.triage || {};
+            const transform = t.targetTransform || {x:0,y:0,z:-65};
+            const resArea = document.getElementById('resultArea');
+            resArea.innerHTML = \`
+                <div class="card">
+                    <div class="meta-bar">
+                        <div><span class="engine-pill">\${data.aiEngine}</span> (\${data.latencyMs})</div>
+                        <div>Category: <b>\${t.category || 'N/A'}</b></div>
+                    </div>
+                    <div class="ar-title">\${t.title || 'CLINICAL TRIAGE'}</div>
+                    <div class="instruction">\${t.instruction || 'FOLLOW EMS INSTRUCTIONS'}</div>
+                    
+                    <div class="grid-props">
+                        <div class="prop-box">
+                            <div class="prop-label">Metronome Cadence</div>
+                            <div class="prop-val">\${t.cadenceBPM ? t.cadenceBPM + ' BPM' : 'Static / Manual'}</div>
+                        </div>
+                        <div class="prop-box">
+                            <div class="prop-label">3D Anatomical Target</div>
+                            <div class="prop-val">\${t.targetRegion || 'STERNUM'}</div>
+                        </div>
+                        <div class="prop-box">
+                            <div class="prop-label">Waveguide Transform</div>
+                            <div class="prop-val">X:\${transform.x} Y:\${transform.y} Z:\${transform.z}</div>
+                        </div>
+                    </div>
+
+                    \${t.criticalWarning ? \`<div class="warning-box">⚠️ <b>PRIORITY:</b> \${t.criticalWarning}</div>\` : ''}
+                    \${t.contraindications ? \`<div class="contra-box">🚫 <b>DO NOT:</b> \${t.contraindications}</div>\` : ''}
+
+                    <pre>\${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            \`;
+        }
+
+        runTriage();
+    </script>
+</body>
+</html>`);
+        return;
+    }
+
     if (parsedUrl.pathname === '/api/accidents') {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
