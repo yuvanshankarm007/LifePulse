@@ -1,204 +1,164 @@
 /**
  * LifePulseController.ts
  * 
- * Core state machine and spatial orchestration for LifePulse AR.
- * Designed for Snap Spectacles via Lens Studio 5.2x+ and Spectacles Interaction Kit (SIK).
+ * Fully Interactive Emergency Spatial Coach for Snap Spectacles & Lens Studio Preview.
  * 
- * Manages:
- * 1. Emergency workflow states: ASSESSMENT -> COMPRESSIONS -> BREATHS -> AED_DEPLOYMENT -> COMPLETE
- * 2. 110 BPM visual & acoustic CPR metronome pulse
- * 3. 30:2 CPR compression counting & automatic phase transitions
- * 4. Additive glowing sternum target ring & AED pad placement guidance
- * 5. Stand-in SIK interactables for seamless Interactive Preview demonstrations
+ * Features:
+ * 1. Auto-resolves StatusHUD, CounterDisplay, CompressionTargetRing, and Mannequin dynamically.
+ * 2. Continuous 110 BPM rhythmic pulsing ring animation (never stationary).
+ * 3. Reactive mouse/touch input: Left-clicking anywhere in Interactive Preview triggers
+ *    compressions, updates the counter in real time, and triggers elastic recoil bounce!
+ * 4. Automatic 30:2 CPR cycle transitions: 30 compressions -> 4s rescue breath countdown -> AED guides.
  */
 
 @component
 export class LifePulseController extends BaseScriptComponent {
 
-    // ==========================================
-    // INSPECTOR INPUTS & SCENE REFERENCES
-    // ==========================================
-
     @input
-    @hint("Virtual patient mannequin root object placed in room")
     patientRoot: SceneObject;
 
     @input
-    @hint("Sternum compression target ring (sits on patient chest)")
     compressionTarget: SceneObject;
 
     @input
-    @hint("Compression status and counter text component (3D Text)")
     counterText: Text3D;
 
     @input
-    @hint("Emergency Phase / Instructional HUD text component (3D Text)")
     statusHUDText: Text3D;
 
     @input
-    @hint("Rescue breath countdown card object (floats near patient mouth)")
-    breathPromptCard: SceneObject;
-
-    @input
-    @hint("AED electrode pad guide root object (showing collarbone & rib targets)")
-    aedPadGuideRoot: SceneObject;
-
-    @input
-    @hint("Auditory metronome click/tone component (110 BPM)")
-    metronomeAudio: AudioComponent;
-
-    @input
-    @hint("State chime / confirmation audio component")
-    chimeAudio: AudioComponent;
-
-    // SIK Interactable Buttons (stand-ins for preview)
-    @input
-    @hint("SIK Button: Start CPR / Confirm 911")
     btnStartCPR: SceneObject;
 
     @input
-    @hint("SIK Button: Simulate Single Chest Compression")
     btnSimulateCompression: SceneObject;
 
-    @input
-    @hint("SIK Button: Deploy Defibrillator / AED")
-    btnDeployAED: SceneObject;
-
-    @input
-    @hint("SIK Button: Reset Scenario")
-    btnReset: SceneObject;
-
-    // ==========================================
-    // INTERNAL STATE VARIABLES
-    // ==========================================
-
-    public currentState: "ASSESSMENT" | "COMPRESSIONS" | "BREATHS" | "AED_DEPLOYMENT" = "ASSESSMENT";
+    public currentState: "COMPRESSIONS" | "BREATHS" | "AED" = "COMPRESSIONS";
     public compressionCount: number = 0;
     public readonly TARGET_COMPRESSIONS: number = 30;
     public currentCycle: number = 1;
 
-    // 110 BPM Metronome Timing (60 / 110 = ~0.5454 seconds per beat)
+    // 110 BPM Metronome Timing (60 / 110 = ~0.545s)
     private readonly BEAT_INTERVAL: number = 60 / 110;
     private beatTimer: number = 0;
-    private ringBaseScale: vec3 = new vec3(1.0, 1.0, 1.0);
-    private isPulsing: boolean = false;
+    private ringBaseScale: vec3 = new vec3(0.35, 0.35, 0.35);
+    private isPulsing: boolean = true;
 
-    // Rescue Breath Countdown
+    // Breath Timer
     private breathTimer: number = 0;
-    private readonly BREATH_DURATION: number = 4.0; // 4 seconds for 2 breaths
+    private readonly BREATH_DURATION: number = 4.0;
 
     onAwake() {
         this.createEvent("OnStartEvent").bind(() => this.init());
         this.createEvent("UpdateEvent").bind(() => this.onUpdate());
     }
 
-    /**
-     * Initializes scene states, hide unneeded elements, and binds SIK click handlers.
-     */
     private init() {
-        print("[LifePulseAR] Initializing LifePulse Emergency Spatial Companion...");
+        print("[LifePulse] Initializing Interactive Emergency Spatial Companion...");
 
-        // Cache initial scale of the sternum target ring
+        // 1. Auto-find scene references if not assigned in Inspector
+        this.autoResolveSceneObjects();
+
+        // 2. Cache base scale
         if (this.compressionTarget) {
             this.ringBaseScale = this.compressionTarget.getTransform().getLocalScale();
+            this.compressionTarget.enabled = true;
         }
 
-        // Setup SIK interactable callbacks (mouse click in preview / pinch on Spectacles)
-        this.bindSIKButton(this.btnStartCPR, () => this.startCPR());
-        this.bindSIKButton(this.btnSimulateCompression, () => this.registerCompression());
-        this.bindSIKButton(this.btnDeployAED, () => this.transitionToAED());
-        this.bindSIKButton(this.btnReset, () => this.resetScenario());
+        // 3. Bind Global Mouse Click / Touch in Interactive Preview
+        const tapEvent = this.createEvent("TapEvent");
+        tapEvent.bind(() => this.onUserInteraction());
 
-        // Start in Assessment mode
-        this.setAssessmentState();
+        const touchEvent = this.createEvent("TouchStartEvent");
+        touchEvent.bind(() => this.onUserInteraction());
+
+        // 4. Start in active CPR mode so it is immediately alive and pulsing
+        this.startCPRMode();
     }
 
     /**
-     * Helper to wire SIK Interactables safely across versions
+     * Automatically discovers scene objects by name if Inspector slots are empty.
      */
-    private bindSIKButton(buttonObject: SceneObject, callback: () => void) {
-        if (!buttonObject) return;
-
-        // Try getting SIK Interactable component
-        const interactable = (buttonObject as any).getComponent("SIK:Interactable") ||
-                             (buttonObject as any).getComponent("Interactable");
-
-        if (interactable && interactable.onTriggerEnd) {
-            interactable.onTriggerEnd.add(callback);
-        } else {
-            // Fallback to standard touch/click event for editor preview resilience
-            const touchComponent = buttonObject.createComponent("Component.TouchComponent");
-            if (touchComponent) {
-                const tapEvent = this.createEvent("TapEvent");
-                tapEvent.bind(callback);
+    private autoResolveSceneObjects() {
+        if (!this.compressionTarget) {
+            this.compressionTarget = this.findSceneObjectByName("CompressionTargetRing");
+        }
+        if (!this.patientRoot) {
+            this.patientRoot = this.findSceneObjectByName("PatientMannequin");
+        }
+        if (!this.statusHUDText) {
+            const hudObj = this.findSceneObjectByName("StatusHUD");
+            if (hudObj) {
+                this.statusHUDText = hudObj.getComponent("Component.Text3D") as any;
+            }
+        }
+        if (!this.counterText) {
+            const counterObj = this.findSceneObjectByName("CounterDisplay");
+            if (counterObj) {
+                this.counterText = counterObj.getComponent("Component.Text3D") as any;
             }
         }
     }
 
-    /**
-     * Phase 1: Assessment State
-     */
-    public setAssessmentState() {
-        this.currentState = "ASSESSMENT";
-        this.compressionCount = 0;
-        this.currentCycle = 1;
-
-        if (this.statusHUDText) {
-            this.statusHUDText.text = "EMERGENCY: UNRESPONSIVE PATIENT\nCHECK BREATHING - CALL 911";
+    private findSceneObjectByName(name: string): SceneObject | null {
+        const rootCount = global.scene.getRootObjectsCount();
+        for (let i = 0; i < rootCount; i++) {
+            const root = global.scene.getRootObject(i);
+            if (root.name === name) return root;
+            const child = this.searchChild(root, name);
+            if (child) return child;
         }
-        if (this.counterText) {
-            this.counterText.text = "PINCH 'START CPR' TO BEGIN";
+        return null;
+    }
+
+    private searchChild(parent: SceneObject, name: string): SceneObject | null {
+        const childCount = parent.getChildrenCount();
+        for (let i = 0; i < childCount; i++) {
+            const child = parent.getChild(i);
+            if (child.name === name) return child;
+            const nested = this.searchChild(child, name);
+            if (nested) return nested;
         }
-
-        // Selective disclosure: Hide active CPR & AED guides until needed
-        if (this.compressionTarget) this.compressionTarget.enabled = false;
-        if (this.breathPromptCard) this.breathPromptCard.enabled = false;
-        if (this.aedPadGuideRoot) this.aedPadGuideRoot.enabled = false;
-
-        // Button visibility
-        if (this.btnStartCPR) this.btnStartCPR.enabled = true;
-        if (this.btnSimulateCompression) this.btnSimulateCompression.enabled = false;
-        if (this.btnDeployAED) this.btnDeployAED.enabled = true;
-
-        print("[LifePulseAR] State -> ASSESSMENT");
+        return null;
     }
 
     /**
-     * Phase 2: Active CPR Chest Compressions (110 BPM Metronome)
+     * Primary Interaction Handler: triggers when clicking anywhere in Preview!
      */
-    public startCPR() {
+    public onUserInteraction() {
+        print("[LifePulse] User clicked / pinched!");
+
+        if (this.currentState === "COMPRESSIONS") {
+            this.registerCompression();
+        } else if (this.currentState === "BREATHS") {
+            // Click during breaths advances early or switches to AED
+            this.transitionToAED();
+        } else if (this.currentState === "AED") {
+            // Click in AED resumes CPR
+            this.startCPRMode();
+        }
+    }
+
+    private startCPRMode() {
         this.currentState = "COMPRESSIONS";
         this.compressionCount = 0;
-        this.beatTimer = 0;
         this.isPulsing = true;
 
         if (this.statusHUDText) {
-            this.statusHUDText.text = `CYCLE ${this.currentCycle}: CHEST COMPRESSIONS\nLOCK ELBOWS - PUSH HARD & FAST`;
+            this.statusHUDText.text = `EMERGENCY CPR ACTIVE (CYCLE ${this.currentCycle})\n110 BPM RHYTHM`;
         }
         this.updateCounterDisplay();
 
-        if (this.compressionTarget) this.compressionTarget.enabled = true;
-        if (this.breathPromptCard) this.breathPromptCard.enabled = false;
-        if (this.aedPadGuideRoot) this.aedPadGuideRoot.enabled = false;
-
-        if (this.btnStartCPR) this.btnStartCPR.enabled = false;
-        if (this.btnSimulateCompression) this.btnSimulateCompression.enabled = true;
-
-        this.playChime();
-        print("[LifePulseAR] State -> COMPRESSIONS (110 BPM)");
+        if (this.compressionTarget) {
+            this.compressionTarget.enabled = true;
+        }
     }
 
-    /**
-     * Registers a single chest compression, updating counter and checking cycle thresholds.
-     */
     public registerCompression() {
-        if (this.currentState !== "COMPRESSIONS") return;
-
         this.compressionCount++;
-        this.triggerVisualCompressionBounce();
+        this.triggerCompressionBounce();
         this.updateCounterDisplay();
 
-        print(`[LifePulseAR] Compression registered: ${this.compressionCount}/${this.TARGET_COMPRESSIONS}`);
+        print(`[LifePulse] Compression: ${this.compressionCount}/${this.TARGET_COMPRESSIONS}`);
 
         if (this.compressionCount >= this.TARGET_COMPRESSIONS) {
             this.transitionToBreaths();
@@ -207,148 +167,101 @@ export class LifePulseController extends BaseScriptComponent {
 
     private updateCounterDisplay() {
         if (this.counterText) {
-            this.counterText.text = `${this.compressionCount} / ${this.TARGET_COMPRESSIONS}\n110 BPM [OPTIMAL]`;
+            this.counterText.text = `COMPRESSION: ${this.compressionCount} / ${this.TARGET_COMPRESSIONS}\nCLICK TO PUMP CHEST`;
         }
     }
 
-    /**
-     * Phase 3: Rescue Breaths Transition
-     */
+    private triggerCompressionBounce() {
+        if (!this.compressionTarget) return;
+
+        const transform = this.compressionTarget.getTransform();
+        // Compressive squash
+        transform.setLocalScale(this.ringBaseScale.uniformScale(0.75));
+
+        const damp = this.createEvent("DelayedCallbackEvent");
+        damp.bind(() => {
+            if (this.compressionTarget) {
+                transform.setLocalScale(this.ringBaseScale);
+            }
+        });
+        damp.reset(0.08);
+    }
+
     private transitionToBreaths() {
         this.currentState = "BREATHS";
         this.isPulsing = false;
         this.breathTimer = this.BREATH_DURATION;
 
         if (this.statusHUDText) {
-            this.statusHUDText.text = "TILT HEAD - LIFT CHIN\nGIVE 2 RESCUE BREATHS";
+            this.statusHUDText.text = "TILT HEAD & LIFT CHIN\nGIVE 2 RESCUE BREATHS";
         }
         if (this.counterText) {
-            this.counterText.text = "WATCH CHEST RISE";
+            this.counterText.text = "WATCH CHEST RISE (4s)";
         }
 
-        // Show breath guidance card over mouth; dim chest target
-        if (this.compressionTarget) this.compressionTarget.enabled = false;
-        if (this.breathPromptCard) this.breathPromptCard.enabled = true;
-        if (this.btnSimulateCompression) this.btnSimulateCompression.enabled = false;
-
-        this.playChime();
-        print("[LifePulseAR] State -> RESCUE BREATHS (4s Countdown)");
+        // Dim chest target ring during rescue breaths (Selective Disclosure)
+        if (this.compressionTarget) {
+            this.compressionTarget.getTransform().setLocalScale(this.ringBaseScale.uniformScale(0.4));
+        }
     }
 
-    /**
-     * Phase 4: AED Deployment & Pad Placement Guide
-     */
-    public transitionToAED() {
-        this.currentState = "AED_DEPLOYMENT";
+    private transitionToAED() {
+        this.currentState = "AED";
         this.isPulsing = false;
 
         if (this.statusHUDText) {
-            this.statusHUDText.text = "AED ARRIVED - APPLY PADS TO BARE CHEST\nFOLLOW HOLOGRAPHIC TARGETS";
+            this.statusHUDText.text = "AED DEFIBRILLATOR READY\nAPPLY PADS TO BARE CHEST";
         }
         if (this.counterText) {
-            this.counterText.text = "PAD 1: UPPER RIGHT CHEST\nPAD 2: LOWER LEFT RIBS";
+            this.counterText.text = "PAD 1: UPPER RIGHT | PAD 2: LOWER RIBS\nCLICK TO RESUME CPR";
         }
 
-        // Show holographic pad positions on mannequin torso
-        if (this.compressionTarget) this.compressionTarget.enabled = false;
-        if (this.breathPromptCard) this.breathPromptCard.enabled = false;
-        if (this.aedPadGuideRoot) this.aedPadGuideRoot.enabled = true;
-
-        if (this.btnStartCPR) this.btnStartCPR.enabled = true; // allow resuming CPR
-        if (this.btnSimulateCompression) this.btnSimulateCompression.enabled = false;
-
-        this.playChime();
-        print("[LifePulseAR] State -> AED DEPLOYMENT");
+        if (this.compressionTarget) {
+            this.compressionTarget.enabled = true;
+            this.compressionTarget.getTransform().setLocalScale(this.ringBaseScale);
+        }
     }
 
-    /**
-     * Reset the scenario to initial state
-     */
-    public resetScenario() {
-        this.setAssessmentState();
-        this.playChime();
-    }
-
-    /**
-     * Per-frame update loop driving 110 BPM metronome and timers
-     */
     private onUpdate() {
         const dt = getDeltaTime();
 
-        // 1. Metronome pulsing during COMPRESSIONS
+        // 1. 110 BPM Rhythmic Pulse (Runs continuously)
         if (this.currentState === "COMPRESSIONS" && this.isPulsing) {
             this.beatTimer += dt;
             if (this.beatTimer >= this.BEAT_INTERVAL) {
                 this.beatTimer -= this.BEAT_INTERVAL;
-                this.playMetronomeTick();
                 this.pulseRingAnimation();
             }
         }
 
-        // 2. Breath timer countdown during BREATHS
+        // 2. Rescue Breath Countdown
         if (this.currentState === "BREATHS") {
             this.breathTimer -= dt;
+            const remaining = Math.max(0, Math.ceil(this.breathTimer));
             if (this.counterText) {
-                const remaining = Math.max(0, Math.ceil(this.breathTimer));
-                this.counterText.text = `RESUME COMPRESSIONS IN: ${remaining}s`;
+                this.counterText.text = `GIVE 2 RESCUE BREATHS: ${remaining}s\nWATCH CHEST RISE`;
             }
 
             if (this.breathTimer <= 0) {
-                // Advance cycle and resume compressions
                 this.currentCycle++;
-                this.startCPR();
+                this.startCPRMode();
             }
         }
     }
 
-    /**
-     * Spatial pulse animation for the sternum target ring
-     */
     private pulseRingAnimation() {
         if (!this.compressionTarget) return;
 
         const transform = this.compressionTarget.getTransform();
-        const pulseScale = this.ringBaseScale.uniformScale(1.18);
-        transform.setLocalScale(pulseScale);
+        // Pulse expand by 25%
+        transform.setLocalScale(this.ringBaseScale.uniformScale(1.25));
 
-        // Quick dampening back to base scale
-        const dampEvent = this.createEvent("DelayedCallbackEvent");
-        dampEvent.bind(() => {
-            if (this.compressionTarget) {
+        const damp = this.createEvent("DelayedCallbackEvent");
+        damp.bind(() => {
+            if (this.compressionTarget && this.currentState === "COMPRESSIONS") {
                 transform.setLocalScale(this.ringBaseScale);
             }
         });
-        dampEvent.reset(0.12);
-    }
-
-    /**
-     * Visual feedback on compression registered
-     */
-    private triggerVisualCompressionBounce() {
-        if (!this.compressionTarget) return;
-
-        const transform = this.compressionTarget.getTransform();
-        const compressedScale = this.ringBaseScale.uniformScale(0.85);
-        transform.setLocalScale(compressedScale);
-
-        const restoreEvent = this.createEvent("DelayedCallbackEvent");
-        restoreEvent.bind(() => {
-            if (this.compressionTarget) {
-                transform.setLocalScale(this.ringBaseScale);
-            }
-        });
-        restoreEvent.reset(0.08);
-    }
-
-    private playMetronomeTick() {
-        if (this.metronomeAudio && this.metronomeAudio.play) {
-            this.metronomeAudio.play(1);
-        }
-    }
-
-    private playChime() {
-        if (this.chimeAudio && this.chimeAudio.play) {
-            this.chimeAudio.play(1);
-        }
+        damp.reset(0.14);
     }
 }
