@@ -1,4 +1,4 @@
-# 🫀 LifePulse: Hands-Free Emergency Spatial Coach
+# 🫀 LifePulse
 ### Built for Snap Spectacles | Learn AR with SPECS (Devpost & Snap Inc.)
 
 > **"When seconds count and hands are occupied: Saving lives through real-time spatial CPR guidance and AED deployment on Snap Spectacles."**
@@ -21,7 +21,7 @@
 ## 📂 Repository File Structure
 
 ```
-lifepulse-specs/
+lifepulse/
 ├── README.md                          # Project documentation & runbook
 ├── devpost/
 │   └── design-brief.md                # Official Devpost Learn Design Brief (Approved)

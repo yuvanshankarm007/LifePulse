@@ -1,4 +1,4 @@
-# LifePulse AR — Judge Q&A Defense & Scoring Rubric Alignment
+# LifePulse — Judge Q&A Defense & Scoring Rubric Alignment
 
 **Event:** Learn AR with SPECS (Devpost & Snap Inc.)  
 **Judging Period:** November 10 – November 17, 2026  

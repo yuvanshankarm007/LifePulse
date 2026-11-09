@@ -1,6 +1,6 @@
 # Devpost Submission Form Content: LifePulse
 
-**Project Title:** LifePulse — Hands-Free Emergency Spatial Coach  
+**Project Title:** LifePulse  
 **Tagline:** When seconds count and hands are occupied: Real-time spatial CPR cadence and AED guidance for Snap Spectacles.  
 **Track:** Learn AR with SPECS (Devpost & Snap Inc.)  
 **Project Repository:** (Public GitHub repository containing `.esproj`, `/scripts`, and `/devpost`)  
