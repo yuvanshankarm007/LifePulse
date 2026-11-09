@@ -1,0 +1,59 @@
+- !<AssetImportMetadata/37cdb53b-245d-4f41-b592-184cacdadf13>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> eca1e15c-1abd-44e8-a649-9d15ed891f03
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> eca1e15c-1abd-44e8-a649-9d15ed891f03
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 0b5a9bdc-46ca-40da-92be-6163d72674f2
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/0b5a9bdc-46ca-40da-92be-6163d72674f2>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 468c6f1b-7586-4563-bc4b-a72c17565bdd
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    btnSimulateCompression: false
+    btnStartCPR: false
+    compressionTarget: false
+    counterText: false
+    patientRoot: false
+    statusHUDText: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - patientRoot: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      compressionTarget: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      counterText: !<reference.Text3D> 00000000-0000-0000-0000-000000000000
+      statusHUDText: !<reference.Text3D> 00000000-0000-0000-0000-000000000000
+      btnStartCPR: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      btnSimulateCompression: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - // @input SceneObject patientRoot
+    - // @input SceneObject compressionTarget
+    - // @input Component.Text3D counterText
+    - // @input Component.Text3D statusHUDText
