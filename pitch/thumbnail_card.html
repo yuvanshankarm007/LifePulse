@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LifePulse - Devpost Thumbnail (1200x800)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #030712;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .canvas-card {
+            width: 1200px;
+            height: 800px;
+            background: radial-gradient(circle at 50% 40%, #082f49 0%, #030712 70%);
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 25px 50px -12px rgba(0, 240, 255, 0.25);
+            border: 2px solid rgba(0, 240, 255, 0.4);
+        }
+        /* Grid overlay */
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            perspective: 500px;
+            transform: rotateX(45deg) translateY(-80px);
+            opacity: 0.7;
+        }
+        /* Top Navigation Header */
+        .hud-top {
+            position: absolute;
+            top: 40px;
+            left: 50px;
+            right: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+            padding-bottom: 20px;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .pulse-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #00f0ff, #3b82f6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+        }
+        .brand-title {
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        .brand-title span {
+            color: #00f0ff;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+        }
+        .specs-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 252, 0, 0.15);
+            border: 1px solid rgba(255, 252, 0, 0.6);
+            padding: 8px 18px;
+            border-radius: 20px;
+            color: #fffb00;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            box-shadow: 0 0 15px rgba(255, 252, 0, 0.3);
+        }
+        /* Central AR Holographic Target */
+        .center-hud {
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .ar-reticle {
+            width: 280px;
+            height: 280px;
+            border: 3px dashed #00f0ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.4), inset 0 0 35px rgba(0, 240, 255, 0.2);
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+        .inner-ring {
+            width: 220px;
+            height: 220px;
+            border: 4px solid #38bdf8;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(8, 47, 73, 0.4);
+        }
+        .bpm-val {
+            font-size: 54px;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1;
+            text-shadow: 0 0 20px #00f0ff;
+        }
+        .bpm-label {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #00f0ff;
+            margin-top: 4px;
+        }
+        .action-banner {
+            margin-top: 25px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #00f0ff;
+            padding: 10px 28px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+        /* Left Telemetry */
+        .hud-left {
+            position: absolute;
+            left: 50px;
+            top: 230px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .telemetry-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-left: 4px solid #00f0ff;
+            padding: 14px 20px;
+            border-radius: 0 10px 10px 0;
+            width: 260px;
+            backdrop-filter: blur(8px);
+        }
+        .telemetry-title {
+            font-size: 13px;
+            color: #94a3b8;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .telemetry-value {
+            font-size: 22px;
+            color: #ffffff;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+        /* Right Emergency Matrix */
+        .hud-right {
+            position: absolute;
+            right: 50px;
+            top: 230px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .ai-status-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-right: 4px solid #10b981;
+            padding: 14px 20px;
+            border-radius: 10px 0 0 10px;
+            width: 270px;
+            backdrop-filter: blur(8px);
+            text-align: right;
+        }
+        .ai-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #10b981;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        .ai-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+        .ai-engine-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-top: 4px;
+        }
+        /* Bottom Banner */
+        .hud-bottom {
+            position: absolute;
+            bottom: 35px;
+            left: 50px;
+            right: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(0, 240, 255, 0.3);
+            padding-top: 18px;
+        }
+        .protocol-pills {
+            display: flex;
+            gap: 12px;
+        }
+        .pill {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            padding: 6px 14px;
+            border-radius: 6px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .pill.active {
+            background: rgba(0, 240, 255, 0.2);
+            border-color: #00f0ff;
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+        }
+        .tagline-sub {
+            color: #38bdf8;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-card" id="thumbnailCard">
+        <div class="grid-bg"></div>
+
+        <!-- Header -->
+        <div class="hud-top">
+            <div class="logo-area">
+                <div class="pulse-icon">🫀</div>
+                <div>
+                    <h1 class="brand-title">Life<span>Pulse</span></h1>
+                </div>
+            </div>
+            <div class="specs-badge">
+                <span>👓 SNAP SPECTACLES</span>
+                <span>• LEARN AR</span>
+            </div>
+        </div>
+
+        <!-- Left Telemetry -->
+        <div class="hud-left">
+            <div class="telemetry-card">
+                <div class="telemetry-title">AR Waveguide</div>
+                <div class="telemetry-value">Hands-Free Spatial</div>
+            </div>
+            <div class="telemetry-card">
+                <div class="telemetry-title">Cadence Metronome</div>
+                <div class="telemetry-value">110 BPM Sternum</div>
+            </div>
+            <div class="telemetry-card">
+                <div class="telemetry-title">Compression Depth</div>
+                <div class="telemetry-value">5.0 - 6.0 CM Recoil</div>
+            </div>
+        </div>
+
+        <!-- Center AR Target -->
+        <div class="center-hud">
+            <div class="ar-reticle">
+                <div class="inner-ring">
+                    <div class="bpm-val">110</div>
+                    <div class="bpm-label">BPM CADENCE</div>
+                </div>
+            </div>
+            <div class="action-banner">
+                ❤️ CARDIAC ARREST • 30 PUMPS : 2 BREATHS
+            </div>
+        </div>
+
+        <!-- Right Telemetry -->
+        <div class="hud-right">
+            <div class="ai-status-card">
+                <div class="ai-status-pill">
+                    <div class="ai-dot"></div>
+                    <span>LIVE AI TRIAGE ACTIVE</span>
+                </div>
+                <div class="ai-engine-name">Groq + Gemini Gateway</div>
+            </div>
+            <div class="ai-status-card" style="border-right-color: #00f0ff;">
+                <div class="ai-status-pill" style="color: #00f0ff;">
+                    <span>🎙️ VOICE INTELLIGENCE</span>
+                </div>
+                <div class="ai-engine-name">Multi-Accident Detect</div>
+            </div>
+            <div class="ai-status-card" style="border-right-color: #f59e0b;">
+                <div class="ai-status-pill" style="color: #f59e0b;">
+                    <span>⚡ CLINICAL EDGE</span>
+                </div>
+                <div class="ai-engine-name">Zero-Crash Resilience</div>
+            </div>
+        </div>
+
+        <!-- Bottom Footer -->
+        <div class="hud-bottom">
+            <div class="protocol-pills">
+                <div class="pill active">❤️ CARDIAC</div>
+                <div class="pill">🗣️ CHOKING</div>
+                <div class="pill">🩸 BLEEDING</div>
+                <div class="pill">💊 OVERDOSE</div>
+                <div class="pill">⚡ ANAPHYLAXIS</div>
+                <div class="pill">🧠 SEIZURE</div>
+            </div>
+            <div class="tagline-sub">
+                DEVPOST HACKATHON 2026 • GRAND PRIZE ENTRY
+            </div>
+        </div>
+    </div>
+</body>
+</html>
